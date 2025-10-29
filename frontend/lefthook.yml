@@ -1,0 +1,14 @@
+# Ref: https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+
+commit-msg:
+  scripts:
+    "commitlint.sh":
+      runner: bash
+
+pre-commit:
+  parallel: true
+  commands:
+    eslint:
+      glob: "*.{js,cjs,mjs,ts,mts,vue}"
+      run: bunx eslint {staged_files} --fix --cache
+      stage_fixed: true
