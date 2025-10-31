@@ -1,8 +1,16 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-import HomePage from '@/components/pages/Home.vue'
+import PageHome from '@/components/pages/Home.vue'
+
+export enum HomeRouteNames {
+  HOME = 'Home',
+}
 
 export const HomeRoute: RouteRecordRaw = {
-  component: HomePage,
+  name: HomeRouteNames.HOME,
+  component: PageHome,
   path: '/',
+  meta: {
+    auth: true,
+  },
 }
