@@ -21,6 +21,7 @@ from infrastructure.di.factory import di_container_factory, init_redis_pool, ini
 from log import get_logger
 
 from api.v1.auth.router import router as auth_router
+from api.v1.users.router import router as users_router
 
 
 logger = get_logger(__name__)
@@ -150,9 +151,9 @@ def init_app(
 
     v1_router = APIRouter(prefix='/api/v1')
     v1_router.include_router(auth_router)
+    v1_router.include_router(users_router)
 
     app.include_router(v1_router)
-    v1_router.include_router(auth_router)
 
     app.exception_handler(RequestValidationError)(on_validation_error(debug))
     app.exception_handler(DoesNotExists)(on_not_found)

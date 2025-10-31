@@ -22,6 +22,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH="/usr/local/bin:$PATH"
 
+COPY entrypoint.sh .
 RUN chmod +x /src/entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]
