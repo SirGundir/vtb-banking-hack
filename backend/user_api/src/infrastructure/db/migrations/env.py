@@ -6,8 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from infrastructure.db.base import Base
-from infrastructure.db.models.users import UserModel
-from infrastructure.db.config import PgConfig
+from infrastructure.config.db import PgConfig
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
