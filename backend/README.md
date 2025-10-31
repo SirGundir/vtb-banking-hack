@@ -25,6 +25,8 @@ make down ; make build ; make up
 make head
 ```
 
+Запустится на 4000 порту.
+
 ### Выгрузить API доку:
 ```
 make user_api_docs
