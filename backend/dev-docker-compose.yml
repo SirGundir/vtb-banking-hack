@@ -1,0 +1,66 @@
+version: '3.10'
+name: vtb_banking
+
+services:
+  postgres:
+    image: postgres:18.0-alpine
+    container_name: vtb_banking.postgres
+    hostname: vtb_banking.postgres
+#    ports:
+#      - "5432:5432"
+    volumes:
+      - vtb_banking.postgres.data:/var/lib/postgresql/data
+    env_file:
+      - postgres/.env
+    networks:
+      - vtb_banking.postgres.network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:8.2-alpine
+    container_name: vtb_banking.redis
+    hostname: vtb_banking.redis
+#    ports:
+#      - "6379:6379"
+    networks:
+      - vtb_banking.redis.network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+
+  user_api:
+    container_name: vtb_banking.user_api
+    hostname: vtb_banking.user_api
+    build:
+      context: ./user_api
+    volumes:
+      - ./user_api/entrypoint.sh:/app/src/entrypoint.sh
+#      - ./web/logger_file.ndjson:/src/logs/logger_file.ndjson
+      - ./user_api/src:/app/src
+    env_file:
+      - ./user_api/.env
+      - ./postgres/.env
+    networks:
+      - vtb_banking.user_api.network
+      - vtb_banking.redis.network
+      - vtb_banking.postgres.network
+    depends_on:
+      - postgres
+      - redis
+
+
+volumes:
+  vtb_banking.postgres.data: {}
+
+networks:
+  vtb_banking.user_api.network: {}
+  vtb_banking.postgres.network: {}
+  vtb_banking.redis.network: {}
