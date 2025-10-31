@@ -8,7 +8,7 @@ from api.v1.depends.auth import access_control_factory, user_dep
 from api.v1.schemas import OkResponseSchema
 from application.auth.services.access_control import AccessControl
 from application.auth.dto import CreateUserDTO, LoginDTO, JwtTokensDTO, ChangePasswordDTO, SetPasswordDTO, \
-    ResetPasswordDTO
+    ResetPasswordDTO, RefreshTokenDTO
 
 router = APIRouter(prefix='/auth')
 
@@ -47,6 +47,16 @@ async def logout(
 ) -> OkResponseSchema:
     await access_control.logout(jwt_tokens)
     return OkResponseSchema()
+
+
+@router.post('/refresh/', response_model=JwtTokensSchema, tags=['auth'])
+async def refresh(
+    access_control: Annotated[
+        AccessControl, Depends(access_control_factory())
+    ],
+    jwt_tokens: RefreshTokenDTO
+):
+    return await access_control.refresh_token(jwt_tokens)
 
 
 @router.post('/change-password/', tags=['auth'], response_model=OkResponseSchema)
