@@ -44,7 +44,7 @@ class UserDTO(TokenUserDTO):
 
 
 class RefreshTokenDTO(BaseModelDTO):
-    refresh_token: str
+    refresh_token: str = Field(validation_alias='refreshToken')
 
 
 EmailStrLower = Annotated[
