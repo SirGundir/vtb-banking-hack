@@ -12,4 +12,4 @@ until nc -z vtb_banking.redis 6379; do
 done
 
 echo "Starting app..."
-python src/main.py
+python main.py

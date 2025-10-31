@@ -2,7 +2,7 @@ FROM python:3.13-slim AS builder
 
 RUN pip install --no-cache-dir uv
 
-WORKDIR /app
+WORKDIR /src
 COPY pyproject.toml uv.lock ./
 
 RUN uv pip install --target=/deps .
@@ -14,14 +14,14 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
-WORKDIR /app
+WORKDIR /src
 COPY --from=builder /deps /usr/local/lib/python3.13/site-packages
-COPY src /app/src
+COPY src /src
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app/src
+ENV PATH="/usr/local/bin:$PATH"
 
-RUN chmod +x /app/src/entrypoint.sh
+RUN chmod +x /src/entrypoint.sh
 
-ENTRYPOINT ["/bin/bash", "/app/src/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]

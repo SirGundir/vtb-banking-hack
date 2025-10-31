@@ -42,9 +42,9 @@ services:
     build:
       context: ./user_api
     volumes:
-      - ./user_api/entrypoint.sh:/app/src/entrypoint.sh
+      - ./user_api/entrypoint.sh:/src/entrypoint.sh
 #      - ./web/logger_file.ndjson:/src/logs/logger_file.ndjson
-      - ./user_api/src:/app/src
+      - ./user_api/src:/src
     env_file:
       - ./user_api/.env
       - ./postgres/.env
