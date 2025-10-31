@@ -63,8 +63,8 @@ class LoginUserDTO(TokenUserDTO):
 
 
 class ChangePasswordDTO(BaseModelDTO):
-    current_password: str
-    new_password: str
+    current_password: str = Field(validation_alias='currentPassword')
+    new_password: str = Field(validation_alias='newPassword')
 
 
 class SetPasswordDTO(BaseModelDTO):
@@ -82,24 +82,16 @@ class ResetPasswordDTO(BaseModelDTO):
 
 
 class JwtTokensDTO(BaseModelDTO):
-    access_token: str
-    refresh_token: str
-    frontend_slug: str | None
+    access_token: str = Field(validation_alias='accessToken')
+    refresh_token: str = Field(validation_alias='refreshToken')
 
 
 class CreateUserDTO(BaseModel):
     email: EmailStrLower
-    raw_password: str | None = Field(default=None, validation_alias='password')
+    raw_password: str | None = Field(validation_alias='password')
     first_name: str | None = Field(default=None, validation_alias='firstName')
     last_name: str | None = Field(default=None, validation_alias='lastName')
     language: str = 'ru'
-
-    @model_validator(mode='after')
-    def validate_raw_password(self) -> 'CreateUserDTO':
-        if self.raw_password is not None:
-            validate_password(self.raw_password)
-        self.raw_password = self.raw_password or generate_password()
-        return self
 
     @classmethod
     @field_validator('language')

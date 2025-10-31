@@ -1,20 +1,17 @@
 from dataclasses import dataclass
-from typing import ClassVar, Type, Any, Callable, Union
+from typing import ClassVar, Type, Any, Union
 
-from pydantic import UUID4
 from sqlalchemy import insert, select, exists, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.dto import BaseModelDTO
-from core.interfaces.repository import RepositoryInterface
+from core.interfaces.repository import RepositoryInterface, IDType
 from core.interfaces.specification import OnConflictInterface, SpecificationInterface
 from infrastructure.db.base import Base
 from infrastructure.db.exceptions import raise_from_pg_error, DoesNotExists
 from infrastructure.db.utils import safe_and_, get_conditions, safe_or_
-
-IDType = UUID4 | int
 
 
 @dataclass
@@ -152,7 +149,7 @@ class SQLAlchemyRepository(RepositoryInterface):
         excluded_fields: set | None = None,
         specifications: list[SpecificationInterface] | None = None,
         **filters
-    ) -> list[Union[IDType |BaseModelDTO]]:
+    ) -> list[Union[IDType | BaseModelDTO]]:
         fields = self._get_returning_fields(
             returning_dto, excluded_fields, specifications
         )

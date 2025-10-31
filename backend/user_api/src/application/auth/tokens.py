@@ -30,7 +30,6 @@ class JwtTokensFactory:
         self,
         user: UserDTO | TokenUserDTO,
         salt: str | None = None,
-        frontend_slug: str = ''
     ) -> JwtTokensDTO:
         include = TokenUserDTO.model_fields.keys()
         access_token_expires = timedelta(minutes=self.config.jwt_access_expire_min)
@@ -38,15 +37,14 @@ class JwtTokensFactory:
         refresh_token_expires = timedelta(minutes=self.config.jwt_refresh_expire_min)
         refresh_expire = utcnow() + refresh_token_expires
         return JwtTokensDTO(
-            access_token=self._make_token(
+            accessToken=self._make_token(
                 user.model_dump(mode='json', include=include),
                 access_expire,
                 salt
             ),
-            refresh_token=self._make_token(
+            refreshToken=self._make_token(
                 user.model_dump(mode='json', include=include),
                 refresh_expire,
                 salt
-            ),
-            frontend_slug=frontend_slug
+            )
         )

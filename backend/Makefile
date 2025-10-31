@@ -25,3 +25,6 @@ check:
 
 head:
 	@docker compose -f dev-docker-compose.yml exec user_api python -m alembic upgrade head
+
+user_api_docs:
+	@docker compose -f dev-docker-compose.yml exec user_api python main.py dump_docs

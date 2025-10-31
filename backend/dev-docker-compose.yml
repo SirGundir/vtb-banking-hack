@@ -41,9 +41,12 @@ services:
     hostname: vtb_banking.user_api
     build:
       context: ./user_api
+    ports:
+      - "4000:4000"
     volumes:
       - ./user_api/entrypoint.sh:/src/entrypoint.sh
 #      - ./web/logger_file.ndjson:/src/logs/logger_file.ndjson
+      - ./user_api/openapi:/src/openapi
       - ./user_api/src:/src
     env_file:
       - ./user_api/.env

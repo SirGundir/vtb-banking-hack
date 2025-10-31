@@ -12,3 +12,4 @@ class LanguageCode(StrEnum):
     ZH = 'zh'
     IT = 'it'
     DE = 'de'
+    RU = 'ru'

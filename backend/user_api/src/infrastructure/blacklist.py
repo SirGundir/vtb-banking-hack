@@ -1,14 +1,8 @@
-from typing import NamedTuple
-
+from core.interfaces.blacklist import TokenExpire, BlacklistInterface
 from infrastructure.cache.base import BaseAsyncCache
 
 
-class TokenExpire(NamedTuple):
-    jwt_token: str
-    expire_min: int
-
-
-class TokenBlacklist(BaseAsyncCache):
+class TokenBlacklist(BlacklistInterface, BaseAsyncCache):
 
     def _get_key(self, token: str) -> str:
         return f'token_blacklist_{token}'

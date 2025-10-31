@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import Type
 
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 
 from core.dto import BaseModelDTO
 from core.interfaces.specification import SpecificationInterface
@@ -66,3 +66,6 @@ class RepositoryInterface(ABC):
         id_field: int,
     ) -> int:
         raise NotImplementedError
+
+
+IDType = UUID4 | int

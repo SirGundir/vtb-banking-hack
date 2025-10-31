@@ -1,0 +1,318 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /api/v1/auth/signup/:
+    post:
+      tags:
+      - auth
+      summary: Signup
+      operationId: signup_api_v1_auth_signup__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtTokensSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/login/:
+    post:
+      tags:
+      - auth
+      summary: Login
+      operationId: login_api_v1_auth_login__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtTokensSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/logout/:
+    post:
+      tags:
+      - auth
+      summary: Logout
+      operationId: logout_api_v1_auth_logout__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JwtTokensDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponseSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/change-password/:
+    post:
+      tags:
+      - auth
+      summary: Change Password
+      operationId: change_password_api_v1_auth_change_password__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponseSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - HTTPBearer: []
+  /api/v1/auth/reset/start/:
+    post:
+      tags:
+      - auth
+      summary: Start Reset Password
+      operationId: start_reset_password_api_v1_auth_reset_start__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponseSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/reset/finish/{uidb64}/{token}/:
+    post:
+      tags:
+      - auth
+      summary: Reset Password
+      operationId: reset_password_api_v1_auth_reset_finish__uidb64___token___post
+      parameters:
+      - name: uidb64
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Uidb64
+      - name: token
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPasswordDTO'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponseSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ChangePasswordDTO:
+      properties:
+        currentPassword:
+          type: string
+          title: Currentpassword
+        newPassword:
+          type: string
+          title: Newpassword
+      type: object
+      required:
+      - currentPassword
+      - newPassword
+      title: ChangePasswordDTO
+    CreateUserDTO:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Password
+        firstName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Firstname
+        lastName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastname
+        language:
+          type: string
+          title: Language
+          default: ru
+      type: object
+      required:
+      - email
+      - password
+      title: CreateUserDTO
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    JwtTokensDTO:
+      properties:
+        accessToken:
+          type: string
+          title: Accesstoken
+        refreshToken:
+          type: string
+          title: Refreshtoken
+      type: object
+      required:
+      - accessToken
+      - refreshToken
+      title: JwtTokensDTO
+    JwtTokensSchema:
+      properties:
+        accessToken:
+          type: string
+          title: Accesstoken
+        refreshToken:
+          type: string
+          title: Refreshtoken
+      type: object
+      required:
+      - accessToken
+      - refreshToken
+      title: JwtTokensSchema
+    LoginDTO:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginDTO
+    OkResponseSchema:
+      properties:
+        status:
+          anyOf:
+          - type: string
+          - type: boolean
+          title: Status
+          default: ok
+      type: object
+      title: OkResponseSchema
+    ResetPasswordDTO:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+      - email
+      title: ResetPasswordDTO
+    SetPasswordDTO:
+      properties:
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - password
+      title: SetPasswordDTO
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

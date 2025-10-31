@@ -10,12 +10,13 @@ from application.auth.exceptions import AuthorizationError, ForbiddenError, Cred
 from application.auth.passwords import hash_password, verify_password
 from application.auth.tokens import JwtTokensFactory
 from core.dto import BaseModelDTO
-from infrastructure.blacklist import TokenBlacklist, TokenExpire
+from core.interfaces.repository import IDType
+from core.interfaces.blacklist import TokenExpire
+from infrastructure.blacklist import TokenBlacklist
 from infrastructure.config.app import AppConfig
 from infrastructure.db.exceptions import DoesNotExists
-from infrastructure.db.repository import IDType
-from infrastructure.log import get_logger
 from infrastructure.repositories.users import UserRepository
+from log import get_logger
 from utils.datetime import utcnow
 
 
@@ -95,8 +96,9 @@ class AccessControl:
                 status=403,
                 silent=True
             )
-        create_data = user_data.model_dump()
+        create_data = user_data.model_dump(exclude={'raw_password'})
         create_data['password'] = hash_password(user_data.raw_password, self.config.secret_key)
+        create_data['email_verified'] = True # FIXME False after verification logic
         create_data['date_joined'] = utcnow()
         user: UserDTO = await self.user_repository.create(create_data, UserDTO)
         # ToDo send verification  email
