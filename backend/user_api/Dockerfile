@@ -3,9 +3,9 @@ FROM python:3.13-slim AS builder
 RUN pip install --no-cache-dir uv
 
 WORKDIR /src
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml .
 
-RUN uv pip install --target=/deps .
+RUN uv lock && uv pip install --target=/deps .
 
 FROM python:3.13-slim
 
