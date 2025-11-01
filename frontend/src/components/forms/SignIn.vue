@@ -90,11 +90,11 @@
 import { ref } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { object, string, email, type ZodType } from 'zod'
-
 import {
   Form as VeeForm,
   Field as VeeField,
 } from 'vee-validate'
+import { useRouter } from 'vue-router'
 
 import UiFormItem from '@/components/ui/form/FormItem.vue'
 import UiFormLabel from '@/components/ui/form/FormLabel.vue'
@@ -104,10 +104,11 @@ import UiInput from '@/components/ui/input/Input.vue'
 import UiButton from '@/components/ui/button/Button.vue'
 
 import { type LoginDTO } from '@/api/models/LoginDTO'
-
+import { HomeRouteNames } from '@/router/routes/home'
 import { useUserStore } from '@/stores/user'
 
 const { signIn } = useUserStore()
+const router = useRouter()
 
 defineOptions({
   name: 'FormSignIn',
@@ -133,6 +134,7 @@ const handleSubmit = async (values: any) => {
     loading.value = true
 
     await signIn(submittedForm)
+    router.push({ name: HomeRouteNames.HOME })
   } catch (error) {
     console.error(error)
   } finally {

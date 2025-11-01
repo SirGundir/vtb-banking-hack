@@ -165,6 +165,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { toTypedSchema } from '@vee-validate/zod'
 import { object, string, email, type ZodType } from 'zod'
 
@@ -180,10 +181,11 @@ import UiLabel from '@/components/ui/label/Label.vue'
 import UiCheckbox from '@/components/ui/checkbox/Checkbox.vue'
 
 import { type CreateUserDTO } from '@/api/models/CreateUserDTO'
-
+import { HomeRouteNames } from '@/router/routes/home'
 import { useUserStore } from '@/stores/user'
 
 const { signUp } = useUserStore()
+const router = useRouter()
 
 defineOptions({
   name: 'FormSignUp',
@@ -215,6 +217,7 @@ const handleSubmit = async (values: any) => {
     loading.value = true
 
     await signUp(submittedForm)
+    router.push({ name: HomeRouteNames.HOME })
   } catch (error) {
     console.error(error)
   } finally {

@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import { HomeRoute } from '@/router/routes/home'
-import { SignInRoute, SignupRoute, ForgotPasswordRoute } from '@/router/routes/auth'
+import { HomeRoute, HomeRouteNames } from '@/router/routes/home'
+import { SignInRoute, SignupRoute, ForgotPasswordRoute, AuthRouteNames } from '@/router/routes/auth'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -14,16 +14,30 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from, next) => {
+const redirectedToHomeRoutes = [
+  AuthRouteNames.SIGN_IN,
+  AuthRouteNames.SIGNUP,
+  AuthRouteNames.FORGOT_PASSWORD,
+]
+
+router.beforeEach(async (to, from, next) => {
   if (!to.meta.auth) return next()
 
-  const { isAuthenticated } = useUserStore()
+  const userStore = useUserStore()
 
-  if (!isAuthenticated) {
-    next({ path: '/signin' })
+  if (!userStore.user) {
+    try {
+      await userStore.getMe()
+      if (redirectedToHomeRoutes.includes(to.name as AuthRouteNames)) {
+        return next({ name: HomeRouteNames.HOME })
+      }
+    } catch (error: unknown) {
+      console.error(error)
+      return next({ name: AuthRouteNames.SIGN_IN })
+    }
   }
 
-  next()
+  return next()
 })
 
 export default router
