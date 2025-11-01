@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: vtb-banking-hack-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      # Apps vars
+      - NODE_ENV=production
+      - VITE_HOST=0.0.0.0
+      - VITE_PORT=80
+    env_file:
+      - ../.env
+    volumes:
+      - ../dist:/app/dist:ro
+    networks:
+      - vtb-banking-hack-frontend-network
+
+networks:
+  vtb-banking-hack-frontend-network:
+    driver: bridge
