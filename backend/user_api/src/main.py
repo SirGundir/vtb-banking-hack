@@ -9,7 +9,7 @@ import app_instance
 def runserver():
     """Start API server."""
     server_config = dict(
-        port=4000,
+        port=8000,
         host='0.0.0.0',
         lifespan='on'
     )

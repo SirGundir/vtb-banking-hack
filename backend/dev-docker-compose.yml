@@ -42,7 +42,7 @@ services:
     build:
       context: ./user_api
     ports:
-      - "4000:4000"
+      - "8000:8000"
     volumes:
       - ./user_api/entrypoint.sh:/src/entrypoint.sh
 #      - ./web/logger_file.ndjson:/src/logs/logger_file.ndjson
