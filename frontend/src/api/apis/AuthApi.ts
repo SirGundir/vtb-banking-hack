@@ -22,6 +22,7 @@ import type {
   JwtTokensSchema,
   LoginDTO,
   OkResponseSchema,
+  RefreshTokenDTO,
   ResetPasswordDTO,
   SetPasswordDTO,
 } from '../models/index';
@@ -40,6 +41,8 @@ import {
     LoginDTOToJSON,
     OkResponseSchemaFromJSON,
     OkResponseSchemaToJSON,
+    RefreshTokenDTOFromJSON,
+    RefreshTokenDTOToJSON,
     ResetPasswordDTOFromJSON,
     ResetPasswordDTOToJSON,
     SetPasswordDTOFromJSON,
@@ -56,6 +59,10 @@ export interface LoginApiV1AuthLoginPostRequest {
 
 export interface LogoutApiV1AuthLogoutPostRequest {
     jwtTokensDTO: JwtTokensDTO;
+}
+
+export interface RefreshApiV1AuthRefreshPostRequest {
+    refreshTokenDTO: RefreshTokenDTO;
 }
 
 export interface ResetPasswordApiV1AuthResetFinishUidb64TokenPostRequest {
@@ -199,6 +206,45 @@ export class AuthApi extends runtime.BaseAPI {
      */
     async logoutApiV1AuthLogoutPost(requestParameters: LogoutApiV1AuthLogoutPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OkResponseSchema> {
         const response = await this.logoutApiV1AuthLogoutPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Refresh
+     */
+    async refreshApiV1AuthRefreshPostRaw(requestParameters: RefreshApiV1AuthRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<JwtTokensSchema>> {
+        if (requestParameters['refreshTokenDTO'] == null) {
+            throw new runtime.RequiredError(
+                'refreshTokenDTO',
+                'Required parameter "refreshTokenDTO" was null or undefined when calling refreshApiV1AuthRefreshPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/v1/auth/refresh/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RefreshTokenDTOToJSON(requestParameters['refreshTokenDTO']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => JwtTokensSchemaFromJSON(jsonValue));
+    }
+
+    /**
+     * Refresh
+     */
+    async refreshApiV1AuthRefreshPost(requestParameters: RefreshApiV1AuthRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<JwtTokensSchema> {
+        const response = await this.refreshApiV1AuthRefreshPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

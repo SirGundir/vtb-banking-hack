@@ -1,8 +1,7 @@
-export SWAGGER_URL=http://localhost:4000/openapi.json
-export API_OUTPUT_PATH=./src/api
+include .env
 
 generate-api:
 	bunx openapi-generator-cli generate \
-		-i $$SWAGGER_URL \
+		-i ${VITE_SWAGGER_URL} \
 		-g typescript-fetch \
-		-o $$API_OUTPUT_PATH
+		-o ${VITE_API_OUTPUT_PATH}

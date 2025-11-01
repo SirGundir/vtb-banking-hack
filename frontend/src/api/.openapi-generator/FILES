@@ -1,5 +1,5 @@
-.openapi-generator-ignore
 apis/AuthApi.ts
+apis/UsersApi.ts
 apis/index.ts
 docs/AuthApi.md
 docs/ChangePasswordDTO.md
@@ -9,9 +9,12 @@ docs/JwtTokensDTO.md
 docs/JwtTokensSchema.md
 docs/LoginDTO.md
 docs/OkResponseSchema.md
+docs/RefreshTokenDTO.md
 docs/ResetPasswordDTO.md
 docs/SetPasswordDTO.md
 docs/Status.md
+docs/UserSchema.md
+docs/UsersApi.md
 docs/ValidationError.md
 docs/ValidationErrorLocInner.md
 index.ts
@@ -22,9 +25,11 @@ models/JwtTokensDTO.ts
 models/JwtTokensSchema.ts
 models/LoginDTO.ts
 models/OkResponseSchema.ts
+models/RefreshTokenDTO.ts
 models/ResetPasswordDTO.ts
 models/SetPasswordDTO.ts
 models/Status.ts
+models/UserSchema.ts
 models/ValidationError.ts
 models/ValidationErrorLocInner.ts
 models/index.ts

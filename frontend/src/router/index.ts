@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 import { HomeRoute } from '@/router/routes/home'
 import { SignInRoute, SignupRoute, ForgotPasswordRoute } from '@/router/routes/auth'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     HomeRoute,
     SignInRoute,

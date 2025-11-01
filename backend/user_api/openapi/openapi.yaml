@@ -78,6 +78,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/refresh/:
+    post:
+      tags:
+      - auth
+      summary: Refresh
+      operationId: refresh_api_v1_auth_refresh__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtTokensSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/auth/change-password/:
     post:
       tags:
@@ -168,6 +193,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/users/me/:
+    get:
+      tags:
+      - users
+      summary: Get Me
+      operationId: get_me_api_v1_users_me__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSchema'
+      security:
+      - HTTPBearer: []
 components:
   schemas:
     ChangePasswordDTO:
@@ -272,6 +312,15 @@ components:
           default: ok
       type: object
       title: OkResponseSchema
+    RefreshTokenDTO:
+      properties:
+        refreshToken:
+          type: string
+          title: Refreshtoken
+      type: object
+      required:
+      - refreshToken
+      title: RefreshTokenDTO
     ResetPasswordDTO:
       properties:
         email:
@@ -291,6 +340,33 @@ components:
       required:
       - password
       title: SetPasswordDTO
+    UserSchema:
+      properties:
+        id:
+          type: string
+          format: uuid4
+          title: Id
+        email:
+          type: string
+          title: Email
+        language:
+          type: string
+          title: Language
+        firstName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Firstname
+        emailVerified:
+          type: boolean
+          title: Emailverified
+          default: false
+      type: object
+      required:
+      - id
+      - email
+      - language
+      title: UserSchema
     ValidationError:
       properties:
         loc:

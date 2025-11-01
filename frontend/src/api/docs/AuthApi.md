@@ -1,12 +1,13 @@
 # AuthApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://localhost:4000*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**changePasswordApiV1AuthChangePasswordPost**](AuthApi.md#changepasswordapiv1authchangepasswordpost) | **POST** /api/v1/auth/change-password/ | Change Password |
 | [**loginApiV1AuthLoginPost**](AuthApi.md#loginapiv1authloginpost) | **POST** /api/v1/auth/login/ | Login |
 | [**logoutApiV1AuthLogoutPost**](AuthApi.md#logoutapiv1authlogoutpost) | **POST** /api/v1/auth/logout/ | Logout |
+| [**refreshApiV1AuthRefreshPost**](AuthApi.md#refreshapiv1authrefreshpost) | **POST** /api/v1/auth/refresh/ | Refresh |
 | [**resetPasswordApiV1AuthResetFinishUidb64TokenPost**](AuthApi.md#resetpasswordapiv1authresetfinishuidb64tokenpost) | **POST** /api/v1/auth/reset/finish/{uidb64}/{token}/ | Reset Password |
 | [**signupApiV1AuthSignupPost**](AuthApi.md#signupapiv1authsignuppost) | **POST** /api/v1/auth/signup/ | Signup |
 | [**startResetPasswordApiV1AuthResetStartPost**](AuthApi.md#startresetpasswordapiv1authresetstartpost) | **POST** /api/v1/auth/reset/start/ | Start Reset Password |
@@ -195,6 +196,72 @@ example().catch(console.error);
 ### Return type
 
 [**OkResponseSchema**](OkResponseSchema.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Successful Response |  -  |
+| **422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## refreshApiV1AuthRefreshPost
+
+> JwtTokensSchema refreshApiV1AuthRefreshPost(refreshTokenDTO)
+
+Refresh
+
+### Example
+
+```ts
+import {
+  Configuration,
+  AuthApi,
+} from '';
+import type { RefreshApiV1AuthRefreshPostRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new AuthApi();
+
+  const body = {
+    // RefreshTokenDTO
+    refreshTokenDTO: ...,
+  } satisfies RefreshApiV1AuthRefreshPostRequest;
+
+  try {
+    const data = await api.refreshApiV1AuthRefreshPost(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **refreshTokenDTO** | [RefreshTokenDTO](RefreshTokenDTO.md) |  | |
+
+### Return type
+
+[**JwtTokensSchema**](JwtTokensSchema.md)
 
 ### Authorization
 

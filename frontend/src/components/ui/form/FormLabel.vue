@@ -9,7 +9,7 @@ defineOptions({
   name: 'UiFormLabel',
 })
 
-const props = defineProps<LabelProps & { class?: HTMLAttributes["class"] }>()
+const props = defineProps<LabelProps & { class?: HTMLAttributes["class"], required?: boolean }>()
 
 const { error, formItemId } = useFormField()
 </script>
@@ -25,5 +25,7 @@ const { error, formItemId } = useFormField()
     :for="formItemId"
   >
     <slot />
+
+    <sup v-if="required" class="text-destructive font-bold">*</sup>
   </Label>
 </template>

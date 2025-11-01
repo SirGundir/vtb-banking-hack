@@ -5,6 +5,7 @@ import { useStorage } from '@vueuse/core'
 import { AuthApi } from '@/api/apis/AuthApi'
 import { type LoginDTO } from '@/api/models/LoginDTO'
 import { type JwtTokensDTO } from '@/api/models/JwtTokensDTO'
+import { type CreateUserDTO } from '@/api/models/CreateUserDTO'
 
 const api = new AuthApi()
 
@@ -19,6 +20,18 @@ export const useUserStore = defineStore('user', () => {
   const signIn = async (credentials: LoginDTO) => {
     try {
       const response = await api.loginApiV1AuthLoginPost({ loginDTO: credentials })
+      accessToken.value = response.accessToken
+      refreshToken.value = response.refreshToken
+      return Promise.resolve(response)
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(error)
+    }
+  }
+
+  const signUp = async (userData: CreateUserDTO) => {
+    try {
+      const response = await api.signupApiV1AuthSignupPost({ createUserDTO: userData })
       accessToken.value = response.accessToken
       refreshToken.value = response.refreshToken
       return Promise.resolve(response)
@@ -48,6 +61,7 @@ export const useUserStore = defineStore('user', () => {
   return {
     isAuthenticated,
     signIn,
+    signUp,
     signOut,
   }
 })
