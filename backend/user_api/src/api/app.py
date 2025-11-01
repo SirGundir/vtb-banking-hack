@@ -139,6 +139,9 @@ def init_app(
         redoc_url=None,
         # docs_url=None,
         debug=debug,
+        servers=[
+            {'url': 'http://localhost:8000', 'description': 'Local development server'},
+        ]
     )
 
     app.add_middleware(
