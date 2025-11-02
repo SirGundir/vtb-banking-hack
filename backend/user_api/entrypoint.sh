@@ -13,4 +13,4 @@ done
 #done
 
 echo "Starting app..."
-python main.py run_server
+python3 /src/main.py run_server
