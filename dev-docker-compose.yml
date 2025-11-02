@@ -62,6 +62,33 @@ services:
       - postgres
       - redis
 
+  data_loader: &worker
+    container_name: vtb_banking.data_loader
+    hostname: vtb_banking.data_loader
+    profiles: ["data_loader"]
+    build:
+      context: ./backend/data_loader
+    volumes:
+      - ./backend/data_loader/src:/src
+    env_file:
+      - ./backend/data_loader/.env
+      - ./backend/postgres/.env
+    networks:
+      - vtb_banking.data_loader.network
+      - vtb_banking.redis.network
+      - vtb_banking.postgres.network
+    depends_on:
+      - postgres
+      - redis
+    command: ["python", "-m", "taskiq", "worker", "broker_instance:broker"]
+  
+  scheduler:
+    <<: *worker
+    container_name: vtb_banking.scheduler
+    hostname: vtb_banking.scheduler
+    command: ["python", "-m", "taskiq", "scheduler", "scheduler_instance:scheduler"]
+
+
   frontend:
     build:
       context: ./frontend
@@ -92,3 +119,4 @@ networks:
   vtb_banking.postgres.network: {}
   vtb_banking.redis.network: {}
   vtb_banking.frontend.network: {}
+  vtb_banking.data_loader.network: {}

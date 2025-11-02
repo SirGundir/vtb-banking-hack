@@ -1,14 +1,14 @@
 down_be:
-	@docker compose --profile backend -f dev-docker-compose.yml down
+	@docker compose --profile backend --profile data_loader -f dev-docker-compose.yml down
 
 up_be:
-	@docker compose --profile backend -f dev-docker-compose.yml up
+	@docker compose --profile backend --profile data_loader -f dev-docker-compose.yml up
 
 up_d_be:
-	@docker compose --profile backend -f dev-docker-compose.yml up -d
+	@docker compose --profile backend --profile data_loader -f dev-docker-compose.yml up -d
 
 build_be:
-	@docker compose --profile backend -f dev-docker-compose.yml build
+	@docker compose --profile backend --profile data_loader -f dev-docker-compose.yml build
 
 user_api_sh:
 	@docker compose -f dev-docker-compose.yml exec user_api bash

@@ -59,6 +59,24 @@ services:
       - postgres
       - redis
 
+  data_loader:
+    container_name: vtb_banking.data_loader
+    hostname: vtb_banking.data_loader
+    build:
+      context: ./data_loader
+    volumes:
+      - ./data_loader/src:/src
+    env_file:
+      - ./data_loader/.env
+      - ./postgres/.env
+    networks:
+      - vtb_banking.data_loader.network
+      - vtb_banking.redis.network
+      - vtb_banking.postgres.network
+    depends_on:
+      - postgres
+      - redis
+
 
 volumes:
   vtb_banking.postgres.data: {}
@@ -67,3 +85,4 @@ networks:
   vtb_banking.user_api.network: {}
   vtb_banking.postgres.network: {}
   vtb_banking.redis.network: {}
+  vtb_banking.data_loader.network: {}
