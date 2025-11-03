@@ -10,6 +10,7 @@ Name | Type
 `email` | string
 `language` | string
 `firstName` | string
+`lastName` | string
 `emailVerified` | boolean
 
 ## Example
@@ -23,6 +24,7 @@ const example = {
   "email": null,
   "language": null,
   "firstName": null,
+  "lastName": null,
   "emailVerified": null,
 } satisfies UserSchema
 

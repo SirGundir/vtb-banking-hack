@@ -1,16 +1,18 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import { HomeRoute } from '@/router/routes/home'
+import { DashboardRoute } from '@/router/routes/dashboard'
 import { SignInRoute, SignupRoute, ForgotPasswordRoute, AuthRouteNames } from '@/router/routes/auth'
+import { ProfileRoute } from '@/router/routes/profile'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
-    HomeRoute,
+    DashboardRoute,
     SignInRoute,
     SignupRoute,
     ForgotPasswordRoute,
+    ProfileRoute,
   ],
 })
 

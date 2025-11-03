@@ -1,6 +1,6 @@
 <template>
   <LayoutBase>
-    <div>HomePage</div>
+    <div>ProfilePage</div>
   </LayoutBase>
 </template>
 
@@ -8,6 +8,6 @@
 import LayoutBase from '@/components/layouts/Base.vue'
 
 defineOptions({
-  name: 'PageHome',
+  name: 'PageProfile',
 })
 </script>

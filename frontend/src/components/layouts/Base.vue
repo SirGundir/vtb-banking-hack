@@ -1,7 +1,9 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col min-h-screen">
     <WidgetHeader />
-    <slot />
+    <div class="flex-1 p-4">
+      <slot />
+    </div>
     <WidgetFooter />
   </div>
 </template>

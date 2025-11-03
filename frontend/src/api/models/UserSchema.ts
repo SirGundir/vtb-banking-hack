@@ -45,6 +45,12 @@ export interface UserSchema {
     firstName?: string | null;
     /**
      * 
+     * @type {string}
+     * @memberof UserSchema
+     */
+    lastName?: string | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof UserSchema
      */
@@ -75,6 +81,7 @@ export function UserSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'email': json['email'],
         'language': json['language'],
         'firstName': json['firstName'] == null ? undefined : json['firstName'],
+        'lastName': json['lastName'] == null ? undefined : json['lastName'],
         'emailVerified': json['emailVerified'] == null ? undefined : json['emailVerified'],
     };
 }
@@ -94,6 +101,7 @@ export function UserSchemaToJSONTyped(value?: UserSchema | null, ignoreDiscrimin
         'email': value['email'],
         'language': value['language'],
         'firstName': value['firstName'],
+        'lastName': value['lastName'],
         'emailVerified': value['emailVerified'],
     };
 }

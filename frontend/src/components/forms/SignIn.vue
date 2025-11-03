@@ -104,7 +104,7 @@ import UiInput from '@/components/ui/input/Input.vue'
 import UiButton from '@/components/ui/button/Button.vue'
 
 import { type LoginDTO } from '@/api/models/LoginDTO'
-import { HomeRouteNames } from '@/router/routes/home'
+import { DashboardRouteNames } from '@/router/routes/dashboard'
 import { useUserStore } from '@/stores/user'
 
 const { signIn } = useUserStore()
@@ -134,7 +134,7 @@ const handleSubmit = async (values: any) => {
     loading.value = true
 
     await signIn(submittedForm)
-    router.push({ name: HomeRouteNames.HOME })
+    router.push({ name: DashboardRouteNames.DASHBOARD })
   } catch (error) {
     console.error(error)
   } finally {
