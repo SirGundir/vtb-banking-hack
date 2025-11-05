@@ -1,29 +1,25 @@
 <template>
-  <LayoutAuth>
-    <UiCard>
-      <UiCardHeader>
-        <UiCardTitle>
-          Вход в систему
-        </UiCardTitle>
-        <UiCardDescription>
-          Введите ваш email и пароль для входа в систему
-        </UiCardDescription>
-      </UiCardHeader>
-      <UiCardContent>
-        <FormSignIn />
-      </UiCardContent>
-      <UiCardFooter>
-        <RouterLink to="/forgot-password" class="text-sm underline text-gray-500 hover:text-gray-700">
-          Забыли пароль?
-        </RouterLink>
-      </UiCardFooter>
-    </UiCard>
-  </LayoutAuth>
+  <UiCard>
+    <UiCardHeader>
+      <UiCardTitle>
+        Вход в систему
+      </UiCardTitle>
+      <UiCardDescription>
+        Введите ваш email и пароль для входа в систему
+      </UiCardDescription>
+    </UiCardHeader>
+    <UiCardContent>
+      <FormSignIn />
+    </UiCardContent>
+    <UiCardFooter>
+      <RouterLink to="/forgot-password" class="text-sm underline text-gray-500 hover:text-gray-700">
+        Забыли пароль?
+      </RouterLink>
+    </UiCardFooter>
+  </UiCard>
 </template>
 
 <script setup lang="ts">
-import LayoutAuth from '@/components/layouts/Auth.vue'
-
 import FormSignIn from '@/components/forms/SignIn.vue'
 
 import UiCard from '@/components/ui/card/Card.vue'

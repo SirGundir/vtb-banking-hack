@@ -1,18 +1,24 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import { DashboardRoute } from '@/router/routes/dashboard'
-import { SignInRoute, SignupRoute, ForgotPasswordRoute, AuthRouteNames } from '@/router/routes/auth'
-import { ProfileRoute } from '@/router/routes/profile'
+import {
+  MeRoute,
+  MeRouteNames,
+} from '@/router/routes/me'
+import {
+  AuthRoute,
+  AuthRouteNames,
+} from '@/router/routes/auth'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
-    DashboardRoute,
-    SignInRoute,
-    SignupRoute,
-    ForgotPasswordRoute,
-    ProfileRoute,
+    {
+      path: '/',
+      redirect: { name: MeRouteNames.ME },
+    },
+    MeRoute,
+    AuthRoute,
   ],
 })
 

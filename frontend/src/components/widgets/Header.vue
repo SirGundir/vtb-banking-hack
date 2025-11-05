@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-4 items-center justify-between pl-2 pr-4 py-2 bg-background dark:bg-black shadow-sm">
+  <div class="flex gap-4 items-center justify-between pl-2 pr-4 py-2 bg-background dark:bg-black border-b border-border">
     <div class="flex items-center gap-2 ml-0.5 h-7">
       <UiSidebarTrigger />
       <UiSeparator orientation="vertical" />

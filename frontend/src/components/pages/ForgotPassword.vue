@@ -1,24 +1,20 @@
 <template>
-  <LayoutAuth>
-    <UiCard>
-      <UiCardHeader>
-        <UiCardTitle>
-          Забыли пароль?
-        </UiCardTitle>
-        <UiCardDescription>
-          Введите ваш email для получения ссылки на восстановление пароля
-        </UiCardDescription>
-      </UiCardHeader>
-      <UiCardContent>
-        <FormForgotPassword />
-      </UiCardContent>
-    </UiCard>
-  </LayoutAuth>
+  <UiCard>
+    <UiCardHeader>
+      <UiCardTitle>
+        Забыли пароль?
+      </UiCardTitle>
+      <UiCardDescription>
+        Введите ваш email для получения ссылки на восстановление пароля
+      </UiCardDescription>
+    </UiCardHeader>
+    <UiCardContent>
+      <FormForgotPassword />
+    </UiCardContent>
+  </UiCard>
 </template>
 
 <script setup lang="ts">
-import LayoutAuth from '@/components/layouts/Auth.vue'
-
 import UiCard from '@/components/ui/card/Card.vue'
 import UiCardHeader from '@/components/ui/card/CardHeader.vue'
 import UiCardTitle from '@/components/ui/card/CardTitle.vue'

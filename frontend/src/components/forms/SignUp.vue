@@ -181,7 +181,7 @@ import UiLabel from '@/components/ui/label/Label.vue'
 import UiCheckbox from '@/components/ui/checkbox/Checkbox.vue'
 
 import { type CreateUserDTO } from '@/api/models/CreateUserDTO'
-import { DashboardRouteNames } from '@/router/routes/dashboard'
+import { MeRouteNames } from '@/router/routes/me'
 import { useUserStore } from '@/stores/user'
 
 const { signUp } = useUserStore()
@@ -217,7 +217,7 @@ const handleSubmit = async (values: any) => {
     loading.value = true
 
     await signUp(submittedForm)
-    router.push({ name: DashboardRouteNames.DASHBOARD })
+    router.push({ name: MeRouteNames.DASHBOARD })
   } catch (error) {
     console.error(error)
   } finally {
