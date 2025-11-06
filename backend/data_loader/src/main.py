@@ -1,9 +1,9 @@
 import asyncio
 
-from broker_instance import broker
-from infrastructure.config.redis import RedisConfig
+from app_instance import broker
+from infrastructure.config.redis import KafkaConfig
 from presentation.worker.broker import init_broker
-from presentation.worker.tasks import download_accounts
+from presentation.worker.handlers import download_accounts
 
 
 async def main():

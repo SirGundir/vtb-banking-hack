@@ -14,7 +14,7 @@ from application.auth.exceptions import PasswordValidationError, AuthorizationEr
 from core.exceptions import ValidateDataError, ActionNotAllowedError
 from infrastructure.config.app import AppConfig
 from infrastructure.config.db import PgConfig
-from infrastructure.config.redis import RedisConfig
+from infrastructure.config.redis import KafkaConfig
 from infrastructure.db.exceptions import AlreadyExistsError, DoesNotExists
 from infrastructure.di.di_container import DIContainer
 from infrastructure.di.factory import di_container_factory, init_redis_pool, init_http_session, init_pg_engine
@@ -114,7 +114,7 @@ class State(TypedDict):
 async def lifespan(app: FastAPI) -> AsyncIterator[State]:
     di_container = di_container_factory(
         app_config=AppConfig(),
-        redis_config=RedisConfig(),
+        redis_config=KafkaConfig(),
         pg_config=PgConfig(),
         redis_pool_factory=init_redis_pool,
         http_session_factory=init_http_session,

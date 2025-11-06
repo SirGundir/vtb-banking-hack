@@ -1,19 +1,17 @@
-from taskiq_redis import RedisStreamBroker, RedisAsyncResultBackend
+from faststream.kafka import KafkaBroker
 
-from infrastructure.config.redis import RedisConfig
-from presentation.worker.tasks import download_accounts
+from infrastructure.config.redis import KafkaConfig
+from presentation.worker import handlers
+from presentation.worker.topics import DOWNLOAD_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC
 
 
-def init_broker(config: RedisConfig) -> RedisStreamBroker:
-    result_backend = RedisAsyncResultBackend(
-        redis_url=config.result_backend_url,
-        max_connection_pool_size=config.result_backend_pool_size
-    )
-    broker = RedisStreamBroker(
-        url=config.broker_url,
-        max_connection_pool_size=config.broker_pool_size
-    ).with_result_backend(result_backend)
+def init_broker(config: KafkaConfig) -> KafkaBroker:
+    broker = KafkaBroker(config.broker_url)
 
-    broker.register_task(download_accounts, schedule=[{"cron": "*/1 * * * *", "kwargs": {'user_id': 1}}])
+    account_sub = broker.subscriber(DOWNLOAD_USER_ACCOUNT_TOPIC)
+    transactions_sub = broker.subscriber(DOWNLOAD_USER_TRANSACTIONS_TOPIC)
+
+    account_sub(handlers.download_accounts)
+    transactions_sub(handlers.download_account_transactions)
 
     return broker
