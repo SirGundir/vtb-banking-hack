@@ -18,7 +18,7 @@ import { Button as UiButton, type ButtonVariants } from '@/components/ui/button'
 import { AuthRouteNames } from '@/router/routes/auth'
 
 defineOptions({
-  name: 'WidgetSignTabs',
+  name: 'WSignTabs',
 })
 
 type ButtonProps = ButtonVariants & {

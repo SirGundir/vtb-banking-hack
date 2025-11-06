@@ -5,16 +5,16 @@
       <UiSeparator orientation="vertical" />
       <div class="text-lg font-medium">OneBank</div>
     </div>
-    <PartialUserMenu />
+    <PUserMenu />
   </div>
 </template>
 
 <script setup lang="ts">
 import { SidebarTrigger as UiSidebarTrigger } from '@/components/ui/sidebar'
 import { Separator as UiSeparator } from '@/components/ui/separator'
-import PartialUserMenu from '@/components/partials/UserMenu.vue'
+import PUserMenu from '@/components/partials/UserMenu.vue'
 
 defineOptions({
-  name: 'WidgetHeader',
+  name: 'WHeader',
 })
 </script>

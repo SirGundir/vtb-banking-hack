@@ -6,6 +6,6 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: 'WidgetFooter',
+  name: 'WFooter',
 })
 </script>

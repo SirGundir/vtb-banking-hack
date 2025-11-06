@@ -35,7 +35,7 @@ import {
 import { MeRouteNames } from '@/router/routes/me'
 
 defineOptions({
-  name: 'WidgetSidebar',
+  name: 'WSidebar',
 })
 
 interface ISidebarLink {

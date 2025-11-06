@@ -1,27 +1,17 @@
 <template>
-  <UiCard>
-    <UiCardHeader>
-      <UiCardTitle>
-        Забыли пароль?
-      </UiCardTitle>
-      <UiCardDescription>
-        Введите ваш email для получения ссылки на восстановление пароля
-      </UiCardDescription>
-    </UiCardHeader>
-    <UiCardContent>
+  <PAuthCard
+    title="Забыли пароль?"
+    description="Введите ваш email для получения ссылки на восстановление пароля"
+  >
+    <template #content>
       <FormForgotPassword />
-    </UiCardContent>
-  </UiCard>
+    </template>
+  </PAuthCard>
 </template>
 
 <script setup lang="ts">
-import UiCard from '@/components/ui/card/Card.vue'
-import UiCardHeader from '@/components/ui/card/CardHeader.vue'
-import UiCardTitle from '@/components/ui/card/CardTitle.vue'
-import UiCardDescription from '@/components/ui/card/CardDescription.vue'
-import UiCardContent from '@/components/ui/card/CardContent.vue'
-
 import FormForgotPassword from '@/components/forms/ForgotPassword.vue'
+import PAuthCard from '@/components/partials/AuthCard.vue'
 
 defineOptions({
   name: 'PageForgotPassword',

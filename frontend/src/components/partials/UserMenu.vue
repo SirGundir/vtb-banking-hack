@@ -43,7 +43,7 @@ import { AuthRouteNames } from '@/router/routes/auth'
 import { MeRouteNames } from '@/router/routes/me'
 
 defineOptions({
-  name: 'PartialUserMenu',
+  name: 'PUserMenu',
 })
 
 const userStore = useUserStore()

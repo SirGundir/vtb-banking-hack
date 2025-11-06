@@ -1,22 +1,25 @@
 <template>
   <div class="flex">
-    <WidgetSidebar />
+    <WSidebar />
     <div class="flex grow flex-col min-h-screen">
-      <WidgetHeader />
-      <WidgetRecommendations />
+      <WHeader />
+      <WRecommendations />
+      <UiSeparator />
       <div class="flex-1 p-4">
         <RouterView />
       </div>
-      <WidgetFooter />
+      <WFooter />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import WidgetSidebar from '@/components/widgets/Sidebar.vue'
-import WidgetHeader from '@/components/widgets/Header.vue'
-import WidgetRecommendations from '@/components/widgets/Recommendations.vue'
-import WidgetFooter from '@/components/widgets/Footer.vue'
+import WSidebar from '@/components/widgets/Sidebar.vue'
+import WHeader from '@/components/widgets/Header.vue'
+import WRecommendations from '@/components/widgets/Recommendations.vue'
+import WFooter from '@/components/widgets/Footer.vue'
+
+import { Separator as UiSeparator } from '@/components/ui/separator'
 
 defineOptions({
   name: 'LayoutMe',

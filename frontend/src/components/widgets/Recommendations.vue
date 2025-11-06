@@ -4,7 +4,7 @@
       <div
         v-for="(recommendation, recommendationIndex) in recommendations"
         :key="`recommendation-${recommendationIndex}`"
-        class="bg-background rounded-lg p-4 shadow-sm"
+        class="bg-background rounded-lg p-4 shadow-sm w-[280px] max-w-full"
       >
         <component :is="recommendation.icon" class="size-8 mb-4" />
         <h3 class="text-sm font-medium">{{ recommendation.title }}</h3>
@@ -18,7 +18,7 @@
 import { Wallet, WalletCards, type LucideIcon } from 'lucide-vue-next'
 
 defineOptions({
-  name: 'WidgetRecommendations',
+  name: 'WRecommendations',
 })
 
 interface IRecommendation {
@@ -30,12 +30,12 @@ interface IRecommendation {
 const recommendations: IRecommendation[] = [
   {
     icon: Wallet,
-    title: 'Вклады',
+    title: 'Вклад с наименьшим процентом',
     description: 'Не упустите выгодное предложение у VTB Банка по вкладам',
   },
   {
     icon: WalletCards,
-    title: 'Кредиты',
+    title: 'Очень выгодный кредит',
     description: 'Выгодные условия для рефинансирования кредитов у VTB Банка',
   },
 ]

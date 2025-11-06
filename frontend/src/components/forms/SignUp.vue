@@ -171,14 +171,16 @@ import { object, string, email, type ZodType } from 'zod'
 
 import { Form as VeeForm, Field as VeeField } from 'vee-validate'
 
-import UiFormItem from '@/components/ui/form/FormItem.vue'
-import UiFormLabel from '@/components/ui/form/FormLabel.vue'
-import UiFormControl from '@/components/ui/form/FormControl.vue'
-import UiFormMessage from '@/components/ui/form/FormMessage.vue'
-import UiInput from '@/components/ui/input/Input.vue'
-import UiButton from '@/components/ui/button/Button.vue'
-import UiLabel from '@/components/ui/label/Label.vue'
-import UiCheckbox from '@/components/ui/checkbox/Checkbox.vue'
+import {
+  FormItem as UiFormItem,
+  FormLabel as UiFormLabel,
+  FormControl as UiFormControl,
+  FormMessage as UiFormMessage,
+} from '@/components/ui/form'
+import { Input as UiInput } from '@/components/ui/input'
+import { Button as UiButton } from '@/components/ui/button'
+import { Label as UiLabel } from '@/components/ui/label'
+import { Checkbox as UiCheckbox } from '@/components/ui/checkbox'
 
 import { type CreateUserDTO } from '@/api/models/CreateUserDTO'
 import { MeRouteNames } from '@/router/routes/me'
