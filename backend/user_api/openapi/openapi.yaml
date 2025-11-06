@@ -211,8 +211,112 @@ paths:
                 $ref: '#/components/schemas/UserSchema'
       security:
       - HTTPBearer: []
+  /api/v1/banks/:
+    get:
+      tags:
+      - bank
+      summary: Get Banks
+      operationId: get_banks_api_v1_banks__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BankSchema'
+                type: array
+                title: Response Get Banks Api V1 Banks  Get
+      security:
+      - HTTPBearer: []
+    post:
+      tags:
+      - bank
+      summary: Add Bank
+      operationId: add_bank_api_v1_banks__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddBankDTO'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/banks/{bankId}/add-consent/:
+    post:
+      tags:
+      - bank
+      summary: Connect User Bank
+      operationId: connect_user_bank_api_v1_banks__bankId__add_consent__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: bankId
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Bankid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponseSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    AddBankDTO:
+      properties:
+        name:
+          type: string
+          title: Name
+        apiUrl:
+          type: string
+          title: Apiurl
+        clientId:
+          type: string
+          title: Clientid
+        clientSecret:
+          type: string
+          title: Clientsecret
+      type: object
+      required:
+      - name
+      - apiUrl
+      - clientId
+      - clientSecret
+      title: AddBankDTO
+    BankSchema:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: BankSchema
     ChangePasswordDTO:
       properties:
         currentPassword:
@@ -226,6 +330,19 @@ components:
       - currentPassword
       - newPassword
       title: ChangePasswordDTO
+    ConsentDataDTO:
+      properties:
+        bank_client_id:
+          type: string
+          title: Bank Client Id
+        consent_id:
+          type: string
+          title: Consent Id
+      type: object
+      required:
+      - bank_client_id
+      - consent_id
+      title: ConsentDataDTO
     CreateUserDTO:
       properties:
         email:
@@ -364,11 +481,18 @@ components:
           type: boolean
           title: Emailverified
           default: false
+        connectedBanks:
+          items:
+            type: integer
+          type: array
+          title: Connectedbanks
+          readOnly: true
       type: object
       required:
       - id
       - email
       - language
+      - connectedBanks
       title: UserSchema
     ValidationError:
       properties:

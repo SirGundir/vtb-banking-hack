@@ -195,6 +195,7 @@ class SQLAlchemyRepository(RepositoryInterface):
             .returning(*fields)
         )
         q = self._apply_specifications(q, specifications)
+        #print(f"update: {q.compile(compile_kwargs={"literal_binds": True})}")
         return await self._execute_query(q, returning_dto, many=False)
 
     async def update_many(

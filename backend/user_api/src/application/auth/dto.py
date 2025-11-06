@@ -1,4 +1,6 @@
 import base64
+import json
+import random
 from typing import Annotated
 
 from jwt.utils import force_bytes
@@ -11,6 +13,7 @@ from utils.multilang import LanguageCode
 from utils.strings import strip_and_lower
 
 
+
 class TokenUserDTO(BaseModelDTO):
     id: UUID4
     is_admin: bool = False
@@ -19,12 +22,28 @@ class TokenUserDTO(BaseModelDTO):
     is_active: bool | None = True
 
 
+class ConsentDataDTO(BaseModelDTO):
+    bank_client_id: str
+    consent_id: str
+
+
 class UserDTO(TokenUserDTO):
     email: EmailStr
     banned_email: bool = False
     password: str | None = Field(exclude=True)
     first_name: str | None = None
     last_name: str | None = None
+    consents: dict[int, ConsentDataDTO]
+
+    @field_validator('consents', mode='before')
+    @classmethod
+    def convert_to_dto(cls, value: dict[int, str | dict]):
+        consents = {}
+        for bank_id, data in value.items():
+            if isinstance(data, str):
+                data = json.loads(data)
+            consents[int(bank_id)] = ConsentDataDTO(**data)
+        return consents
 
     @property
     def has_password(self):

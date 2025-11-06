@@ -62,6 +62,60 @@ services:
       - postgres
       - redis
 
+  data_loader: &worker
+    container_name: vtb_banking.data_loader
+    hostname: vtb_banking.data_loader
+    profiles: ["data_loader"]
+    build:
+      context: ./backend/data_loader
+    volumes:
+      - ./backend/data_loader/src:/src
+    env_file:
+      - ./backend/data_loader/.env
+      - ./backend/postgres/.env
+    networks:
+      - vtb_banking.data_loader.network
+      - vtb_banking.postgres.network
+    depends_on:
+      - postgres
+      - redis
+    command: ["python", "-m", "main"]
+
+  kafka:
+    container_name: vtb_banking.kafka
+    hostname: vtb_banking.kafka
+    profiles: [ "data_loader" ]
+    image: apache/kafka:latest
+    environment:
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_LOG4J_ROOT_LOGLEVEL: ERROR
+      KAFKA_LOG4J_LOGGERS: "kafka=ERROR,kafka.controller=ERROR,kafka.server=ERROR"
+    ports:
+      - "9092:9092"
+    volumes:
+      - vtb_banking.kafka.data:/var/lib/kafka/data
+
+  clickhouse:
+    container_name: vtb_banking.clickhouse
+    hostname: vtb_banking.clickhouse
+    profiles: ["data_loader"]
+    image: clickhouse/clickhouse-server:25.7-alpine
+    env_file: ./backend/data_loader/.env
+    volumes:
+      - vtb_banking.clickhouse.data:/var/lib/clickhouse
+      - ./clickhouse:/docker-entrypoint-initdb.d
+
   frontend:
     build:
       context: ./frontend
@@ -86,9 +140,12 @@ services:
 
 volumes:
   vtb_banking.postgres.data: {}
+  vtb_banking.clickhouse.data: {}
+  vtb_banking.kafka.data: {}
 
 networks:
   vtb_banking.user_api.network: {}
   vtb_banking.postgres.network: {}
   vtb_banking.redis.network: {}
   vtb_banking.frontend.network: {}
+  vtb_banking.data_loader.network: {}

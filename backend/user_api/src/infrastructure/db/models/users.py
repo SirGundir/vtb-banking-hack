@@ -1,14 +1,20 @@
+from typing import TypedDict
 from uuid import uuid4
 
 from sqlalchemy import Uuid, Boolean, JSON, String, Text, DateTime, Integer, \
     BigInteger, ForeignKey, ARRAY, text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.sql import expression
 
 from infrastructure.db.base import TimestampedMixin, Base
 from infrastructure.db.tablenames import USER_TABLE
 from utils.datetime import utcnow
-from utils.enum import StrEnum
-from utils.ids import get_uuid_str
+
+
+class ConsentData(TypedDict):
+    bank_client_id: str
+    consent_id: str
 
 
 class UserModel(TimestampedMixin, Base):
@@ -17,6 +23,8 @@ class UserModel(TimestampedMixin, Base):
     id = mapped_column(Uuid, default=uuid4, primary_key=True)
     is_active = mapped_column(Boolean, default=True)
     email_verified = mapped_column(Boolean, default=False)
+
+    consents = mapped_column(JSONB, nullable=False, default=dict)
 
     is_admin = mapped_column(Boolean, default=False)
     is_superuser = mapped_column(Boolean, default=False)

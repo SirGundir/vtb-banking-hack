@@ -7,4 +7,5 @@ class AppConfig(BaseSettings):
     jwt_algorithm: str = 'HS256'
     jwt_access_expire_min: int = 30
     jwt_refresh_expire_min: int = 60 * 24 * 7
-
+    client_id: str = Field(alias='CLIENT_ID')
+    client_secret: str = Field(alias='CLIENT_SECRET')

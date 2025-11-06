@@ -2,13 +2,14 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from api.v1.auth.depends import password_command_dep, password_query_dep
 from api.v1.auth.schemas import JwtTokensSchema
 from api.v1.depends.auth import access_control_factory, user_dep
+from api.v1.depends.cqrs import CommandDependency, QueryDependency
 from api.v1.schemas import OkResponseSchema
 from application.auth.services.access_control import AccessControl
 from application.auth.dto import CreateUserDTO, LoginDTO, JwtTokensDTO, ChangePasswordDTO, SetPasswordDTO, \
     ResetPasswordDTO, RefreshTokenDTO
+from application.auth.services.password import PasswordService
 
 router = APIRouter(prefix='/auth')
 
@@ -57,6 +58,10 @@ async def refresh(
     jwt_tokens: RefreshTokenDTO
 ):
     return await access_control.refresh_token(jwt_tokens)
+
+
+password_command_dep = Annotated[PasswordService, Depends(CommandDependency(PasswordService))]
+password_query_dep = Annotated[PasswordService, Depends(QueryDependency(PasswordService))]
 
 
 @router.post('/change-password/', tags=['auth'], response_model=OkResponseSchema)
