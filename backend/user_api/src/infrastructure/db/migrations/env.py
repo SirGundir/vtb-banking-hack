@@ -8,6 +8,9 @@ from alembic import context
 from infrastructure.db.base import Base
 from infrastructure.config.db import PgConfig
 
+from infrastructure.db.models.users import UserModel
+from infrastructure.db.models.banks import BankModel
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 pg_config = PgConfig()

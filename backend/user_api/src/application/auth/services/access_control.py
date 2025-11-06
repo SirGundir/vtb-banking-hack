@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from typing import Type
 
 import jwt
-from jose import ExpiredSignatureError, JWTError
+from jose import JWTError
+from jwt import ExpiredSignatureError
 
 from application.auth.dto import TokenUserDTO, JwtTokensDTO, CreateUserDTO, UserDTO, LoginDTO, LoginUserDTO, \
     RefreshTokenDTO
@@ -140,8 +141,6 @@ class AccessControl:
         return await self._verify_jwt_token(jwt_token, returning_dto)
 
     async def refresh_token(self, token_data: RefreshTokenDTO) -> JwtTokensDTO:
-        user: TokenUserDTO = await self._verify_jwt_token(
-            token_data.refresh_token, TokenUserDTO
-        )
+        user: TokenUserDTO = await self._verify_jwt_token(token_data.refresh_token, TokenUserDTO)
         await self.blacklist.add_token(token_data.refresh_token, self.config.jwt_refresh_expire_min)
         return JwtTokensFactory(self.config).make_jwt_tokens(user)

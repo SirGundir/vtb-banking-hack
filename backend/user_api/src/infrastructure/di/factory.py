@@ -8,11 +8,14 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 
 from application.auth.services.access_control import AccessControl
 from application.auth.services.password import PasswordService
+from application.banks.services import BankService
 from infrastructure.blacklist import TokenBlacklist
+from infrastructure.clients import BankOpenApiInterface, HttpBankClient
 from infrastructure.config.app import AppConfig
 from infrastructure.config.db import PgConfig
 from infrastructure.config.redis import RedisConfig
 from infrastructure.di.di_container import DIContainer
+from infrastructure.repositories.banks import BankRepository
 from infrastructure.repositories.users import UserRepository
 from utils.event_loop import safe_get_loop
 
@@ -59,11 +62,14 @@ def di_container_factory(
     container.register_singleton(aiohttp.ClientSession, http_session_factory)
     # repositories
     container.register(UserRepository)
+    container.register(BankRepository)
     # caches
     container.register(TokenBlacklist)
     # etc
+    container.register(BankOpenApiInterface, HttpBankClient)
     # services
     container.register(AccessControl)
     container.register(PasswordService)
+    container.register(BankService)
     return container
 

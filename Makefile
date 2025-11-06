@@ -12,9 +12,6 @@ up_d_all:
 build_all:
 	@docker compose -f dev-docker-compose.yml build --no-cache
 
-user_api_sh:
-	@docker compose -f dev-docker-compose.yml exec user_api bash
-
 down_dev:
 	@docker compose --profile frontend --profile backend -f dev-docker-compose.yml down
 
