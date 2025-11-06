@@ -1,7 +1,7 @@
 from datetime import date
 
 from pydantic import BaseModel, Field
-from pydantic.v1 import UUID4
+from pydantic import UUID4
 
 
 class UserAccountDTO(BaseModel):

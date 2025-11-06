@@ -1,6 +1,6 @@
 from faststream.kafka import KafkaBroker
 
-from infrastructure.config.redis import KafkaConfig
+from infrastructure.config.kafka import KafkaConfig
 from presentation.worker import handlers
 from presentation.worker.topics import DOWNLOAD_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC
 

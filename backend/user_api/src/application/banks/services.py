@@ -1,6 +1,8 @@
 import random
 from dataclasses import dataclass
 
+from faststream.kafka import KafkaBroker
+
 from application.auth.dto import UserDTO
 from application.banks.dto import BankDTO, AddBankDTO
 from infrastructure.clients import BankOpenApiInterface, ConsentRequest
@@ -9,6 +11,13 @@ from infrastructure.db.exceptions import AlreadyExistsError
 from infrastructure.db.models.users import ConsentData
 from infrastructure.repositories.banks import BankRepository
 from infrastructure.repositories.users import UserRepository, update_consents
+from log import get_logger
+
+
+logger = get_logger(__name__)
+
+
+DOWNLOAD_USER_ACCOUNT_TOPIC = 'download_user_account'
 
 
 @dataclass
@@ -30,6 +39,15 @@ class BankService:
     async def get_banks(self) -> list[BankDTO]:
         return await self.bank_repository.fetch_many(returning_dto=BankDTO, is_active=True)
 
+
+
+@dataclass
+class ConnectBankService:
+    user_repository: UserRepository
+    bank_repository: BankRepository
+    bank_api: BankOpenApiInterface
+    broker: KafkaBroker
+
     async def connect_user_bank(self, bank_id: int, user: UserDTO):
         if user.consents and bank_id in user.consents:
             raise AlreadyExistsError(f"Bank {bank_id} already connected to user")
@@ -49,6 +67,7 @@ class BankService:
             ))
         )
         await self.user_repository.update(update_data, id=user.id)
-        print(f"Add user consent")
-        # Start loading data
-
+        logger.info(f"Connected bank {bank_id} to user {user.id}")
+        publisher = self.broker.publisher(DOWNLOAD_USER_ACCOUNT_TOPIC)
+        await publisher.publish(str(user.id))
+        logger.info(f"Schedule downloading user data for user {user.id}")

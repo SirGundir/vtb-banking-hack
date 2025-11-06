@@ -1,13 +1,10 @@
 import asyncio
 
-from app_instance import broker
-from infrastructure.config.redis import KafkaConfig
-from presentation.worker.broker import init_broker
-from presentation.worker.handlers import download_accounts
+from app_instance import app
 
 
 async def main():
-    await broker.startup()
+    await app.run()
 
 
 if __name__ == "__main__":

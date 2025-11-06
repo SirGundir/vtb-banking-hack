@@ -4,13 +4,13 @@ from dataclasses import dataclass
 
 from redis.asyncio import ConnectionPool, Redis
 
-from infrastructure.config.redis import KafkaConfig
+from infrastructure.config.redis import RedisConfig
 
 
 @dataclass
 class BaseAsyncCache:
     redis_pool: ConnectionPool
-    config: KafkaConfig
+    config: RedisConfig
 
     serialization: str = 'pickle'
 

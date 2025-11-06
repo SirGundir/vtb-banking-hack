@@ -5,9 +5,8 @@ import orjson
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 
-from infrastructure.config.app import AppConfig
 from infrastructure.config.db import PgConfig
-from infrastructure.config.redis import KafkaConfig
+from infrastructure.config.kafka import KafkaConfig
 from infrastructure.di.di_container import DIContainer
 from utils.event_loop import safe_get_loop
 
@@ -30,8 +29,7 @@ def init_pg_engine(pg_config: PgConfig) -> AsyncEngine:
 
 
 def di_container_factory(
-    app_config: AppConfig,
-    redis_config: KafkaConfig,
+    kafka_config: KafkaConfig,
     pg_config: PgConfig,
     http_session_factory: Callable,
     pg_engine_factory: Callable
@@ -39,8 +37,7 @@ def di_container_factory(
     container = DIContainer()
 
     # singletons
-    container.register_instance(AppConfig, app_config)
-    container.register_instance(KafkaConfig, redis_config)
+    container.register_instance(KafkaConfig, kafka_config)
     container.register_singleton(AsyncEngine, lambda: pg_engine_factory(pg_config))
     container.register_singleton(aiohttp.ClientSession, http_session_factory)
     # repositories
