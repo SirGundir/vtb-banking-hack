@@ -25,7 +25,6 @@ class BankService:
         create_data = bank.model_dump()
         create_data['access_data'] = access_data
         bank = await self.bank_repository.create(create_data, returning_dto=BankDTO)
-        print(f">>>{bank=}")
         return bank
 
     async def get_banks(self) -> list[BankDTO]:
@@ -49,7 +48,6 @@ class BankService:
                 consent_id=consent_id
             ))
         )
-        print(f">>>{update_data=}")
         await self.user_repository.update(update_data, id=user.id)
         print(f"Add user consent")
         # Start loading data
