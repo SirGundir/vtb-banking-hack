@@ -18,6 +18,7 @@ class UserModel(Base):
 
     consents = mapped_column(JSONB, nullable=False, default=dict)
     updated_accounts = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    updated_balances = mapped_column(DateTime(timezone=True), nullable=True, default=None)
     updated_transactions = mapped_column(DateTime(timezone=True), nullable=True, default=None)
 
     def __repr__(self):

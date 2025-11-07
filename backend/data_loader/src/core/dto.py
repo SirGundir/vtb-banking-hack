@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import date, datetime
 from decimal import Decimal
 
@@ -21,19 +22,12 @@ class UserAccountDTO(BaseModelDTO):
     opening_date: date = Field(validation_alias='openingDate')
 
 
-class AccountBalanceDTO(BaseModelDTO):
+class AccountAmountDataDTO(BaseModelDTO):
     account_id: str = Field(validation_alias='accountId')
     user_id: UUID4
     bank_id: int
     currency: str
-    balance_type: str = Field(validation_alias='type')
     amount: Decimal = 0
-    credit_debit_indicator: str = Field(validation_alias='creditDebitIndicator')
-    balance_at_datetime: datetime = Field(validation_alias='dateTime')
-
-    @field_serializer('balance_at_datetime')
-    def serialize_balance_at_datetime(self, v: datetime):
-        return v.strftime('%Y-%m-%d %H:%M:%S')
 
     @model_validator(mode='before')
     @classmethod
@@ -43,6 +37,35 @@ class AccountBalanceDTO(BaseModelDTO):
             data['currency'] = amount_data['currency']
         return data
 
+
+class AccountBalanceDTO(AccountAmountDataDTO):
+
+    balance_type: str = Field(validation_alias='type')
+    credit_debit_indicator: str = Field(validation_alias='creditDebitIndicator')
+    balance_at_datetime: datetime = Field(validation_alias='dateTime')
+
+    @field_serializer('balance_at_datetime')
+    def serialize_balance_at_datetime(self, v: datetime):
+        return v.strftime('%Y-%m-%d %H:%M:%S')
+
+
+class AccountTransactionDTO(AccountAmountDataDTO):
+    transaction_id: str = Field(validation_alias='transactionId')
+    status: str
+    booking_dt: datetime = Field(validation_alias='bookingDateTime')
+    value_dt: datetime = Field(validation_alias='valueDateTime')
+    transaction_info: str = Field(validation_alias='transactionInformation')
+    bank_transaction_code: str = Field(validation_alias='bankTransactionCode')
+
+    @field_validator('transaction_info', mode='before')
+    def clean_transaction_info(cls, value: str) -> str:
+        cleaned = re.sub(r"\b(?=\w*[A-Za-z])(?=\w*\d)\w+\b", "", value)
+        return re.sub(r"\s{2,}", " ", cleaned).strip()
+
+
+    @field_validator('bank_transaction_code', mode='before')
+    def get_bank_transaction_code(cls, value: dict) -> str:
+        return value.get('code')
 
 
 class ConsentDataDTO(BaseModelDTO):

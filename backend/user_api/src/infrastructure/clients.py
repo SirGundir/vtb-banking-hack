@@ -101,7 +101,7 @@ class HttpBankClient(BankOpenApiInterface):
         }
         payload = {
           "client_id": request.bank_client_id,
-          "permissions": ["ReadAccountsDetail", "ReadBalances"],
+          "permissions": ["ReadAccountsDetail", "ReadBalances", "ReadTransactionsDetail"],
           "reason": "Агрегация счетов для HackAPI",
           "requesting_bank": request.client_id,
           "requesting_bank_name": "Team 221 App"

@@ -7,8 +7,6 @@ services:
     container_name: vtb_banking.postgres
     hostname: vtb_banking.postgres
     profiles: ["backend"]
-#    ports:
-#      - "5432:5432"
     volumes:
       - vtb_banking.postgres.data:/var/lib/postgresql/data
     env_file:
@@ -86,16 +84,12 @@ services:
       - postgres
       - kafka
       - clickhouse
-    command: ["python", "-m", "main"]
 
   kafka:
     container_name: vtb_banking.kafka
     hostname: vtb_banking.kafka
     profiles: [ "data_loader" ]
     image: apache/kafka:latest
-    build:
-      context: ./backend/kafka
-      dockerfile: ./backend/kafka/Dockerfile
     environment:
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
@@ -110,8 +104,6 @@ services:
       KAFKA_NUM_PARTITIONS: 1
       KAFKA_LOG4J_ROOT_LOGLEVEL: ERROR
       KAFKA_LOG4J_LOGGERS: "kafka=ERROR,kafka.controller=ERROR,kafka.server=ERROR"
-    ports:
-      - "9092:9092"
     volumes:
       - vtb_banking.kafka.data:/var/lib/kafka/data
     networks:
