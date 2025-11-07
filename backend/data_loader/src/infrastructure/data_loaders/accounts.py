@@ -72,7 +72,7 @@ class UserAccountsLoader(HttpLoader):
 
         return [UserAccountDTO(user_id=credentials.user_id, bank_id=credentials.bank_id, **data) for data in accounts]
 
-    async def get_account_balance(self, account_id: str, credentials: Credentials) -> AccountBalanceDTO:
+    async def get_account_balances(self, account_id: str, credentials: Credentials) -> list[AccountBalanceDTO]:
         headers = {
             'Authorization': f"Bearer {credentials.access_token}",
             'X-Consent-Id': credentials.consent_id,
@@ -89,10 +89,11 @@ class UserAccountsLoader(HttpLoader):
         if error := response.get('response'):
             raise DownloadError(self.endpoint, error)
 
-        print(f">>>{response=}")
-        #
-        # if not (accounts := response.get('data', {}).get('account')):
-        #     raise DownloadError(self.endpoint, str(response))
-        #
-        # return [UserAccountDTO(user_id=credentials.user_id, bank_id=credentials.bank_id, **data) for data in accounts]
+        if not (balances := response.get('data', {}).get('balance')):
+            raise DownloadError(self.endpoint, str(response))
+
+        return [
+            AccountBalanceDTO(user_id=credentials.user_id, bank_id=credentials.bank_id, **data)
+            for data in balances
+        ]
 
