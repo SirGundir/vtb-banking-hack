@@ -45,25 +45,27 @@ SETTINGS
     kafka_commit_every_batch = 1,
     kafka_skip_broken_messages = 1;
 
---
---CREATE TABLE kafka_transactions
---(
---    account_id String,
---    account_type String,
---    nickname String,
---    amount Float64,
---    currency String,
---    created_at DateTime
---)
---ENGINE = Kafka()
---SETTINGS
---    kafka_broker_list = 'kafka:9092',
---    kafka_topic_list = 'ch_transactions_topic',
---    kafka_group_name = 'ch_transactions_consumer',
---    kafka_format = 'JSONEachRow',
---    kafka_num_consumers = 1,
---    stream_flush_interval_ms = 500,
---    kafka_max_block_size = 1000;
+CREATE TABLE kafka_transactions
+(
+    user_id UUID,
+    bank_id Int64,
+    account_id String,
+    transaction_id String,
+    status String,
+    transaction_info String,
+    currency String,
+    amount Decimal64(2),
+    bank_transaction_code String
+)
+ENGINE = Kafka()
+SETTINGS
+    kafka_broker_list = 'kafka:9092',
+    kafka_topic_list = 'ch_accounts_transaction_topic',
+    kafka_group_name = 'ch_accounts_transactions_consumer',
+    kafka_format = 'JSONEachRow',
+    kafka_num_consumers = 1,
+    stream_flush_interval_ms = 500,
+    kafka_max_block_size = 1000;
 
 
 CREATE TABLE accounts
@@ -96,16 +98,20 @@ ENGINE = ReplacingMergeTree()
 ORDER BY (user_id, bank_id, account_id, balance_at_datetime);
 
 
---CREATE TABLE transactions
---(
---    tx_id String,
---    account_id String,
---    amount Float64,
---    currency String,
---    created_at DateTime
---)
---ENGINE = ReplacingMergeTree()
---ORDER BY (account_id, created_at);
+CREATE TABLE transactions
+(
+    user_id UUID,
+    bank_id Int64,
+    account_id String,
+    transaction_id String,
+    status String,
+    transaction_info String,
+    currency String,
+    amount Decimal64(2),
+    bank_transaction_code String
+)
+ENGINE = ReplacingMergeTree()
+ORDER BY (user_id, bank_id, account_id, transaction_id);
 
 
 CREATE MATERIALIZED VIEW mv_accounts
@@ -120,7 +126,7 @@ AS
 SELECT * FROM kafka_account_balances;
 
 
---CREATE MATERIALIZED VIEW mv_transactions
---TO transactions
---AS
---SELECT * FROM kafka_transactions;
+CREATE MATERIALIZED VIEW mv_transactions
+TO transactions
+AS
+SELECT * FROM kafka_transactions;

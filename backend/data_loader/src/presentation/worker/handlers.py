@@ -7,7 +7,7 @@ from core.mapers import dto_to_ndjson
 from log import get_logger
 from presentation.worker.depends.cqrs import CommandDependency
 from presentation.worker.topics import CLICKHOUSE_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_BALANCE_TOPIC, \
-    CLICKHOUSE_USER_BALANCES_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC
+    CLICKHOUSE_USER_BALANCES_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC, CLICKHOUSE_USER_TRANSACTIONS_TOPIC
 
 logger = get_logger(__name__)
 
@@ -67,8 +67,8 @@ async def download_account_transactions(
             account_id=account_id
         )
         async for transactions in transactions_generator:
-            print(f">>>{transactions=}")
-        # await broker.publish(dto_to_ndjson(balances).encode("utf-8"), CLICKHOUSE_USER_BALANCES_TOPIC)
-        # logger.info(f"Publish {len(balances)}, {user_id=}, {bank_id=}, {account_id=}")
+            if transactions:
+                await broker.publish(dto_to_ndjson(transactions).encode("utf-8"), CLICKHOUSE_USER_TRANSACTIONS_TOPIC)
+                logger.info(f"Publish {len(transactions)}, {user_id=}, {bank_id=}, {account_id=}")
     except Exception as exc:
         logger.exception(exc)

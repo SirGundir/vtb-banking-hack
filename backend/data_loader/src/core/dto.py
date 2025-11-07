@@ -39,7 +39,6 @@ class AccountAmountDataDTO(BaseModelDTO):
 
 
 class AccountBalanceDTO(AccountAmountDataDTO):
-
     balance_type: str = Field(validation_alias='type')
     credit_debit_indicator: str = Field(validation_alias='creditDebitIndicator')
     balance_at_datetime: datetime = Field(validation_alias='dateTime')
