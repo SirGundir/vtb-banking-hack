@@ -34,6 +34,16 @@ async def add_bank(
     return await bank_service.add_bank(bank_data)
 
 
+@router.post('/{bankId}/reject-consent/', response_model=OkResponseSchema, tags=['bank'])
+async def reject_consent(
+    user: user_dep,
+    bank_service: connect_command_dep,
+    bankId: int
+):
+    await bank_service.reject_user_consent(bankId, user)
+    return OkResponseSchema()
+
+
 @router.post('/{bankId}/add-consent/', response_model=OkResponseSchema, tags=['bank'])
 async def connect_user_bank(
     user: user_dep,

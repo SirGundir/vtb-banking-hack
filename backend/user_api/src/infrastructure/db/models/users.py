@@ -15,6 +15,7 @@ from utils.datetime import utcnow
 class ConsentData(TypedDict):
     bank_client_id: str
     consent_id: str
+    api_url: str
 
 
 class UserModel(TimestampedMixin, Base):
@@ -38,6 +39,9 @@ class UserModel(TimestampedMixin, Base):
     # image_url = mapped_column(Text, nullable=True, default=None)
 
     language = mapped_column(String(3), default='ru')
+
+    updated_accounts = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    updated_transactions = mapped_column(DateTime(timezone=True), nullable=True, default=None)
 
     date_joined = mapped_column(DateTime(timezone=True), default=utcnow)
 

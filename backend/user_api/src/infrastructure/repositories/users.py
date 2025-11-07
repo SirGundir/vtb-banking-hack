@@ -21,3 +21,6 @@ def update_consents(bank_id: int, consent_data: ConsentData):
         UserModel.consents,
         {bank_id: dict(consent_data)}
     )
+
+def delete_consent(bank_id: int):
+    return UserModel.consents.op('-')(str(bank_id))

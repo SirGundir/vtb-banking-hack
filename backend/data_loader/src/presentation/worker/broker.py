@@ -2,7 +2,8 @@ from faststream.kafka import KafkaBroker
 
 from infrastructure.config.kafka import KafkaConfig
 from presentation.worker import handlers
-from presentation.worker.topics import DOWNLOAD_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC
+from presentation.worker.topics import DOWNLOAD_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC, \
+    DOWNLOAD_USER_BALANCE_TOPIC
 
 
 def init_broker(config: KafkaConfig) -> KafkaBroker:
@@ -10,8 +11,10 @@ def init_broker(config: KafkaConfig) -> KafkaBroker:
 
     account_sub = broker.subscriber(DOWNLOAD_USER_ACCOUNT_TOPIC)
     transactions_sub = broker.subscriber(DOWNLOAD_USER_TRANSACTIONS_TOPIC)
+    balances_sub = broker.subscriber(DOWNLOAD_USER_BALANCE_TOPIC)
 
     account_sub(handlers.download_accounts)
     transactions_sub(handlers.download_account_transactions)
+    balances_sub(handlers.download_account_balance)
 
     return broker
