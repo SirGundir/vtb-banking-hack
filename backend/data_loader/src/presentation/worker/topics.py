@@ -4,4 +4,8 @@ DOWNLOAD_USER_TRANSACTIONS_TOPIC = 'download_user_transaction'
 CLICKHOUSE_USER_ACCOUNT_TOPIC = 'ch_accounts_topic'
 CLICKHOUSE_USER_BALANCES_TOPIC = 'ch_accounts_balances_topic'
 CLICKHOUSE_USER_TRANSACTIONS_TOPIC = 'ch_accounts_transaction_topic'
+DOWNLOAD_BANK_PRODUCTS_TOPIC = 'download_bank_products'
+DOWNLOAD_BANK_PRODUCT_DETAILS_TOPIC = 'download_bank_product_details'
+CLICKHOUSE_BANK_PRODUCTS_TOPIC = 'ch_bank_products_topic'
+CLICKHOUSE_BANK_PRODUCT_DETAILS_TOPIC = 'ch_bank_product_details_topic'
 

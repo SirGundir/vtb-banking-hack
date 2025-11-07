@@ -1,53 +1,13 @@
-import asyncio
 from dataclasses import dataclass
 from datetime import datetime
-from typing import ClassVar, Any
+from typing import ClassVar
 
-from aiohttp import ClientSession, ClientError
+from aiohttp import ClientError
 from pydantic import BaseModel, Field
 
 from core.dto import UserAccountDTO, AccountBalanceDTO, AccountTransactionDTO
 from core.interfaces.data_loaders import Credentials
-from utils.retry import retry_helper
-
-
-NOT_SET_URL = 'NOT_SET_URL'
-
-
-class DownloadError(Exception):
-    def __init__(self, endpoint, message=''):
-        super().__init__(f"Error to download data from {endpoint}, {message}")
-        self.endpoint = endpoint
-
-
-@dataclass
-class HttpLoader:
-    http_session: ClientSession
-    semaphore: asyncio.Semaphore
-
-    api_url: str = NOT_SET_URL
-
-    def with_api_url(self, api_url: str):
-        self.api_url = api_url
-        return self
-
-    @retry_helper
-    async def _make_request(
-        self,
-        endpoint: str,
-        method: str = "GET",
-        params: dict[str, Any] | None = None,
-        headers: dict[str, Any] | None = None,
-    ) -> Any:
-        assert self.api_url != NOT_SET_URL
-        async with self.semaphore:
-            async with self.http_session.request(
-                method,
-                f"{self.api_url}/{endpoint}",
-                params=params,
-                headers=headers
-            ) as response:
-                return await response.json()
+from infrastructure.data_loaders.http import HttpLoader, DownloadError, PaginatedResponse
 
 
 class TransactionsQueryParams(BaseModel):
@@ -59,11 +19,6 @@ class TransactionsQueryParams(BaseModel):
     @property
     def as_request_params(self) -> dict:
         return self.model_dump(exclude_none=True, by_alias=True)
-
-
-class PaginatedResponse(BaseModel):
-    data: Any
-    next_page: int | None = None
 
 
 @dataclass
@@ -82,7 +37,7 @@ class UserAccountsLoader(HttpLoader):
         except ClientError as exc:
             raise DownloadError(self.endpoint) from exc
 
-        if error := response.get('response'):
+        if error := response.get('error'):
             raise DownloadError(self.endpoint, error)
 
         if not (accounts := response.get('data', {}).get('account')):
@@ -104,7 +59,7 @@ class UserAccountsLoader(HttpLoader):
         except ClientError as exc:
             raise DownloadError(self.endpoint) from exc
 
-        if error := response.get('response'):
+        if error := response.get('error'):
             raise DownloadError(self.endpoint, error)
 
         if not (balances := response.get('data', {}).get('balance')):
@@ -135,7 +90,7 @@ class UserAccountsLoader(HttpLoader):
         except ClientError as exc:
             raise DownloadError(self.endpoint) from exc
 
-        if error := response.get('response'):
+        if error := response.get('error'):
             raise DownloadError(self.endpoint, error)
 
         transactions = [

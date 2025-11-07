@@ -2,12 +2,14 @@ from faststream import Depends, Context
 from faststream.kafka import KafkaBroker
 from pydantic import BaseModel, UUID4
 
+from application.banks.services import BankProductService
 from application.user_accounts.services import UserAccountService
 from core.mapers import dto_to_ndjson
 from log import get_logger
 from presentation.worker.depends.cqrs import CommandDependency
 from presentation.worker.topics import CLICKHOUSE_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_BALANCE_TOPIC, \
-    CLICKHOUSE_USER_BALANCES_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC, CLICKHOUSE_USER_TRANSACTIONS_TOPIC
+    CLICKHOUSE_USER_BALANCES_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC, CLICKHOUSE_USER_TRANSACTIONS_TOPIC, \
+    CLICKHOUSE_BANK_PRODUCTS_TOPIC
 
 logger = get_logger(__name__)
 
@@ -72,3 +74,26 @@ async def download_account_transactions(
                 logger.info(f"Publish {len(transactions)}, {user_id=}, {bank_id=}, {account_id=}")
     except Exception as exc:
         logger.exception(exc)
+
+
+async def download_bank_products(
+    bank_id: int,
+    bank_service: BankProductService = Depends(CommandDependency(BankProductService)),
+    broker: KafkaBroker = Context()
+):
+    try:
+        products = await bank_service.download_products(bank_id)
+        await broker.publish(dto_to_ndjson(products).encode("utf-8"), CLICKHOUSE_BANK_PRODUCTS_TOPIC)
+        logger.info(f"Publish {len(products)}, {bank_id=}")
+    except Exception as exc:
+        logger.exception(exc)
+
+
+
+async def download_bank_product_details(
+    bank_id: int,
+    product_id: str,
+    bank_service: BankProductService = Depends(CommandDependency(BankProductService)),
+    broker: KafkaBroker = Context()
+):
+    await bank_service.download_products(bank_id)

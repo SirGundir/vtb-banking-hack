@@ -87,3 +87,16 @@ class UserDTO(BaseModelDTO):
                 data = json.loads(data)
             consents[int(bank_id)] = ConsentDataDTO(**data)
         return consents
+
+
+
+class BankProductsDTO(BaseModelDTO):
+    bank_id: int
+    product_id: str = Field(validation_alias='productId')
+    product_type: str = Field(validation_alias='productType')
+    product_name: str = Field(validation_alias='productName')
+    description: str | None
+    interest_rate: Decimal | None = Field(validation_alias='interestRate')
+    min_amount: Decimal | None = Field(validation_alias='minAmount')
+    max_amount: Decimal | None = Field(validation_alias='maxAmount')
+    term_months: int | None = Field(validation_alias='termMonths')

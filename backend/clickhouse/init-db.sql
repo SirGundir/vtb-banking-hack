@@ -68,6 +68,29 @@ SETTINGS
     kafka_max_block_size = 1000;
 
 
+CREATE TABLE kafka_bank_products
+(
+    bank_id Int64,
+    product_id String,
+    product_type String,
+    product_name String,
+    description Nullable(String),
+    interest_rate Nullable(Decimal64(2)),
+    min_amount Nullable(Decimal64(2)),
+    max_amount Nullable(Decimal64(2)),
+    term_months (Int64)
+)
+ENGINE = Kafka()
+SETTINGS
+    kafka_broker_list = 'kafka:9092',
+    kafka_topic_list = 'ch_bank_products_topic',
+    kafka_group_name = 'ch_bank_products_consumer',
+    kafka_format = 'JSONEachRow',
+    kafka_num_consumers = 1,
+    stream_flush_interval_ms = 500,
+    kafka_max_block_size = 1000;
+
+
 CREATE TABLE accounts
 (
     user_id UUID,
@@ -114,6 +137,22 @@ ENGINE = ReplacingMergeTree()
 ORDER BY (user_id, bank_id, account_id, transaction_id);
 
 
+CREATE TABLE bank_products
+(
+    bank_id Int64,
+    product_id String,
+    product_type String,
+    product_name String,
+    description Nullable(String),
+    interest_rate Nullable(Decimal64(2)),
+    min_amount Nullable(Decimal64(2)),
+    max_amount Nullable(Decimal64(2)),
+    term_months Nullable(Int64)
+)
+ENGINE = ReplacingMergeTree()
+ORDER BY (bank_id, product_id);
+
+
 CREATE MATERIALIZED VIEW mv_accounts
 TO accounts
 AS
@@ -130,3 +169,9 @@ CREATE MATERIALIZED VIEW mv_transactions
 TO transactions
 AS
 SELECT * FROM kafka_transactions;
+
+
+CREATE MATERIALIZED VIEW mv_bank_products
+TO bank_products
+AS
+SELECT * FROM kafka_bank_products;

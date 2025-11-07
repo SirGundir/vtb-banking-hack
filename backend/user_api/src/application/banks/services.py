@@ -23,6 +23,8 @@ logger = get_logger(__name__)
 
 
 DOWNLOAD_USER_ACCOUNT_TOPIC = 'download_user_account'
+DOWNLOAD_BANK_PRODUCTS_TOPIC = 'download_bank_products'
+DOWNLOAD_BANK_PRODUCT_DETAILS_TOPIC = 'download_bank_product_details'
 
 
 @dataclass
@@ -30,6 +32,8 @@ class BankService:
     user_repository: UserRepository
     bank_repository: BankRepository
     bank_api: BankOpenApiInterface
+    broker: KafkaBroker
+
     config: AppConfig
 
     async def add_bank(self, bank: AddBankDTO):
@@ -40,6 +44,8 @@ class BankService:
         access_data['timestamp'] = time.time()
         create_data['access_data'] = access_data
         bank = await self.bank_repository.create(create_data, returning_dto=BankDTO)
+        async with self.broker as br:
+            await br.publish(bank.id, DOWNLOAD_BANK_PRODUCTS_TOPIC)
         return bank
 
     async def get_banks(self) -> list[BankDTO]:

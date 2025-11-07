@@ -6,10 +6,12 @@ import orjson
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 
+from application.banks.services import BankProductService
 from application.user_accounts.services import UserAccountService
 from infrastructure.config.db import PgConfig
 from infrastructure.config.kafka import KafkaConfig
 from infrastructure.data_loaders.accounts import UserAccountsLoader
+from infrastructure.data_loaders.bank import BankProductsLoader
 from infrastructure.di.di_container import DIContainer
 from infrastructure.repositories.banks import BankRepository
 from infrastructure.repositories.users import UserRepository
@@ -52,7 +54,10 @@ def di_container_factory(
     # caches
     # etc
     container.register(UserAccountsLoader)
+    container.register(BankProductsLoader)
     # services
     container.register(UserAccountService)
+    container.register(BankProductService)
+
     return container
 
