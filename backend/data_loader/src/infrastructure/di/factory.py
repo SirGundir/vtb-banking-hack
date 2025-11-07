@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable
 
 import aiohttp
@@ -5,9 +6,13 @@ import orjson
 from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 
+from application.user_accounts.services import UserAccountService
 from infrastructure.config.db import PgConfig
 from infrastructure.config.kafka import KafkaConfig
+from infrastructure.data_loaders.accounts import UserAccountsLoader
 from infrastructure.di.di_container import DIContainer
+from infrastructure.repositories.banks import BankRepository
+from infrastructure.repositories.users import UserRepository
 from utils.event_loop import safe_get_loop
 
 
@@ -40,9 +45,14 @@ def di_container_factory(
     container.register_instance(KafkaConfig, kafka_config)
     container.register_singleton(AsyncEngine, lambda: pg_engine_factory(pg_config))
     container.register_singleton(aiohttp.ClientSession, http_session_factory)
+    container.register_instance(asyncio.Semaphore, asyncio.Semaphore(100))
     # repositories
+    container.register(UserRepository)
+    container.register(BankRepository)
     # caches
     # etc
+    container.register(UserAccountsLoader)
     # services
+    container.register(UserAccountService)
     return container
 

@@ -1,3 +1,5 @@
+import time
+
 from pydantic import Field
 
 from core.dto import BaseModelDTO
@@ -14,6 +16,10 @@ class BankDTO(BaseModelDTO):
     @property
     def access_token(self):
         return self.access_data['access_token']
+
+    @property
+    def access_expired(self):
+        return time.time() - self.access_data['timestamp'] > self.access_data['expires_in']
 
 
 class AddBankDTO(BaseModelDTO):

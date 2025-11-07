@@ -32,3 +32,6 @@ user_api_docs:
 psql:
 	@docker compose -f dev-docker-compose.yml exec postgres psql -U postgres -d postgres
 
+ch:
+	@docker compose -f dev-docker-compose.yml exec clickhouse clickhouse-client
+

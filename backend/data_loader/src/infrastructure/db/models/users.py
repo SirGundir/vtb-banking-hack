@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from sqlalchemy import Uuid, Boolean, String, Text, DateTime, text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import mapped_column
 
 from infrastructure.db.base import Base
@@ -15,7 +16,9 @@ class UserModel(Base):
     is_active = mapped_column(Boolean, default=True)
     email_verified = mapped_column(Boolean, default=False)
 
-    consent_id = mapped_column(String(64), default=None, nullable=True)
+    consents = mapped_column(JSONB, nullable=False, default=dict)
+    updated_accounts = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    updated_transactions = mapped_column(DateTime(timezone=True), nullable=True, default=None)
 
     def __repr__(self):
         return f"User ({self.id})"

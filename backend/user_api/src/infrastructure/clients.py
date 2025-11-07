@@ -40,6 +40,9 @@ class BankOpenApiInterface(Protocol):
     async def get_consent_status(self):
         raise NotImplementedError
 
+    async def delete_consent(self, consent_id: str):
+        raise NotImplementedError
+
 
 retry_helper = retry(
     retry=retry_if_exception_type(ClientError),
@@ -90,7 +93,7 @@ class HttpBankClient(BankOpenApiInterface):
     async def create_consent(self, request: ConsentRequest) -> str:
         headers = {
             'Authorization': f"Bearer {request.access_token}",
-            'X-Requesting-Bank': request.bank_client_id
+            'X-Requesting-Bank': request.client_id
         }
         params = {
             'client_id': request.client_id,
@@ -112,9 +115,18 @@ class HttpBankClient(BankOpenApiInterface):
                 json=payload
             )
         except ClientError as exc:
-            raise GetConsentError() from exc
+            raise GetConsentError(f"Cant create consent") from exc
 
         if data.get('status') != 'approved':
             raise GetConsentError(data.get('message'))
 
         return data.get('consent_id')
+
+    async def delete_consent(self, consent_id: str):
+        try:
+            await self._make_request(
+                f'account-consents/{consent_id}',
+                method='DELETE',
+            )
+        except ClientError as exc:
+            raise GetConsentError(f"Cant delete {consent_id=}") from exc

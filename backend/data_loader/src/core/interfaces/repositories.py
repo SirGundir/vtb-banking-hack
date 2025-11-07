@@ -67,6 +67,3 @@ class RepositoryInterface(Protocol):
 
 
 IDType = UUID4 | int
-
-
-class UserRepositoryInterface(RepositoryInterface): ...

@@ -26,6 +26,7 @@ class OnConflictUpdate(OnConflictInterface):
         )
 
 
+@dataclass
 class SQLAlchemyRepository(RepositoryInterface):
     # dependency
     session: AsyncSession
