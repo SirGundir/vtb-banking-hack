@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # PostgreSQL база данных
+  db:
+    image: postgres:15
+    container_name: recommender_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recommender
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - recommender_network
+
+  # FastAPI приложение
+  app:
+    build: .
+    container_name: recommender_app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/recommender
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+      - ml_models:/app/ml_model/saved_models
+    networks:
+      - recommender_network
+    restart: unless-stopped
+
+volumes:
+  db_data:
+    driver: local
+  ml_models:
+    driver: local
+
+networks:
+  recommender_network:
+    driver: bridge
