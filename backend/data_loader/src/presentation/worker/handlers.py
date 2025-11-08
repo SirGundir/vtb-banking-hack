@@ -9,7 +9,7 @@ from log import get_logger
 from presentation.worker.depends.cqrs import CommandDependency
 from presentation.worker.topics import CLICKHOUSE_USER_ACCOUNT_TOPIC, DOWNLOAD_USER_BALANCE_TOPIC, \
     CLICKHOUSE_USER_BALANCES_TOPIC, DOWNLOAD_USER_TRANSACTIONS_TOPIC, CLICKHOUSE_USER_TRANSACTIONS_TOPIC, \
-    CLICKHOUSE_BANK_PRODUCTS_TOPIC
+    CLICKHOUSE_BANK_PRODUCTS_TOPIC, DOWNLOAD_BANK_PRODUCT_DETAILS_TOPIC
 
 logger = get_logger(__name__)
 
@@ -84,6 +84,8 @@ async def download_bank_products(
     try:
         products = await bank_service.download_products(bank_id)
         await broker.publish(dto_to_ndjson(products).encode("utf-8"), CLICKHOUSE_BANK_PRODUCTS_TOPIC)
+        batch = [dict(bank_id=bank_id, product_id=product.product_id) for product in products]
+        await broker.publisher(DOWNLOAD_BANK_PRODUCT_DETAILS_TOPIC, batch=True).publish(*batch)
         logger.info(f"Publish {len(products)}, {bank_id=}")
     except Exception as exc:
         logger.exception(exc)
@@ -96,4 +98,4 @@ async def download_bank_product_details(
     bank_service: BankProductService = Depends(CommandDependency(BankProductService)),
     broker: KafkaBroker = Context()
 ):
-    await bank_service.download_products(bank_id)
+    await bank_service.download_product_details(bank_id, product_id)
