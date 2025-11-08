@@ -60,6 +60,7 @@ import { type TBank, type TBankName } from '@/shared/types'
 import { EBankName } from '@/shared/enums'
 
 import { useBanksStore } from '@/stores/banks'
+import { useUserStore } from '@/stores/user'
 
 defineOptions({
   name: 'WAvailableBanks',
@@ -72,8 +73,24 @@ const mapBanksToLoading = reactive<TMapBanksToLoading>(Object.values(EBankName).
   return acc
 }, {} as TMapBanksToLoading))
 
+const userStore = useUserStore()
+const { connectedBanks } = storeToRefs(userStore)
 const banksStore = useBanksStore()
 const { banks, isGetBanksLoading, mapBanksToName } = storeToRefs(banksStore)
+
+const getUser = async () => {
+  try {
+    await userStore.getMe()
+  } catch (error: unknown) {
+    if (error instanceof ResponseError) {
+      const errorData = await (error as ResponseError).response.json()
+
+      return toast.error(errorData.detail)
+    }
+
+    toast.error('Неизвестная ошибка')
+  }
+}
 
 const getBanks = async () => {
   try {
@@ -123,6 +140,10 @@ const consentBank = async ({ name }: TBank) => {
     mapBanksToLoading[name] = true
 
     await banksStore.consentBank(mapBanksToName.value[name].id)
+
+    getUser()
+
+    toast.success('Согласие на подключение успешно дано')
   } catch (error) {
     if (error instanceof ResponseError) {
       const errorData = await (error as ResponseError).response.json()
@@ -141,6 +162,10 @@ const rejectConsent = async ({ name }: TBank) => {
     mapBanksToLoading[name] = true
 
     await banksStore.rejectConsent(mapBanksToName.value[name].id)
+
+    getUser()
+
+    toast.success('Согласие на подключение успешно отозвано')
   } catch (error: unknown) {
     if (error instanceof ResponseError) {
       const errorData = await (error as ResponseError).response.json()
@@ -154,13 +179,13 @@ const rejectConsent = async ({ name }: TBank) => {
   }
 }
 
-const isBankAdded = (name: string) => {
+const isBankAdded = (name: TBankName) => {
   return banks.value.some(b => b.name === name)
 }
 
-const isBankConsented = (name: string) => {
-  // @ts-expect-error: TODO: waiting for the backend to return the accountConsents
-  return banks.value.some(b => b.name === name && b.accountConsents)
+const isBankConsented = (name: TBankName) => {
+  const bankId = mapBanksToName.value[name].id
+  return connectedBanks.value.includes(bankId)
 }
 
 onMounted(getBanks)

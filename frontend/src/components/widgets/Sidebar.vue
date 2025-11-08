@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutDashboard, type LucideIcon } from 'lucide-vue-next'
+import { LayoutDashboard, Building2, Target, type LucideIcon } from 'lucide-vue-next'
 import {
   Sidebar as UiSidebar,
   SidebarContent as UiSidebarContent,
@@ -32,7 +32,7 @@ import {
   SidebarMenuButton as UiSidebarMenuButton,
 } from '@/components/ui/sidebar'
 
-import { MeRouteNames } from '@/router/routes/me'
+import { MeRouteNames, OnboardingRouteNames } from '@/shared/enums'
 
 defineOptions({
   name: 'WSidebar',
@@ -49,6 +49,16 @@ const links: ISidebarLink[] = [
     label: 'Панель мониторинга',
     name: MeRouteNames.DASHBOARD,
     icon: LayoutDashboard,
+  },
+  {
+    label: 'Подключение банков',
+    name: OnboardingRouteNames.BANKS,
+    icon: Building2,
+  },
+  {
+    label: 'Настройка целей',
+    name: OnboardingRouteNames.SURVEY,
+    icon: Target,
   },
 ]
 </script>

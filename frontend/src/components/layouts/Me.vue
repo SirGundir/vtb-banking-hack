@@ -1,10 +1,8 @@
 <template>
   <div class="flex">
-    <WSidebar />
+    <WSidebar v-if="hasConnectedBanks" />
     <div class="flex grow flex-col min-h-screen">
-      <WHeader />
-      <WRecommendations />
-      <UiSeparator />
+      <WHeader :hide-sidebar="!hasConnectedBanks" />
       <div class="flex-1 p-4">
         <RouterView />
       </div>
@@ -16,10 +14,13 @@
 <script setup lang="ts">
 import WSidebar from '@/components/widgets/Sidebar.vue'
 import WHeader from '@/components/widgets/Header.vue'
-import WRecommendations from '@/components/widgets/Recommendations.vue'
 import WFooter from '@/components/widgets/Footer.vue'
 
-import { Separator as UiSeparator } from '@/components/ui/separator'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
+
+const userStore = useUserStore()
+const { hasConnectedBanks } = storeToRefs(userStore)
 
 defineOptions({
   name: 'LayoutMe',

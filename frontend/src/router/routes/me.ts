@@ -4,16 +4,9 @@ import LayoutMe from '@/components/layouts/Me.vue'
 
 import PageDashboard from '@/components/pages/Dashboard.vue'
 
-import {
-  OnboardingRouteNames,
-} from '@/router/routes/onboarding'
+import { MeRouteNames, OnboardingRouteNames } from '@/shared/enums'
 
 import { useUserStore } from '@/stores/user'
-
-export enum MeRouteNames {
-  ME = 'Me',
-  DASHBOARD = 'Dashboard',
-}
 
 export const MeDashboardRoute: RouteRecordRaw = {
   name: MeRouteNames.DASHBOARD,

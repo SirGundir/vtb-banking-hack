@@ -27,6 +27,10 @@ export const useUserStore = defineStore('user', () => {
     return (user.value?.connectedBanks.length ?? 0) > 0
   })
 
+  const connectedBanks = computed(() => {
+    return user.value?.connectedBanks ?? []
+  })
+
   /**
    * Вход в систему
    * @param credentials - Логин и пароль
@@ -120,8 +124,7 @@ export const useUserStore = defineStore('user', () => {
   
       return response
     } catch (error) {
-      console.error(error)
-      throw error
+      return Promise.reject(error)
     } finally {
       isGetMeLoading.value = false
     }
@@ -153,6 +156,7 @@ export const useUserStore = defineStore('user', () => {
     refreshToken,
     isAuthenticated,
     hasConnectedBanks,
+    connectedBanks,
     signIn,
     signUp,
     signOut,

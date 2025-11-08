@@ -6,12 +6,7 @@ import PageSignIn from '@/components/pages/SignIn.vue'
 import PageSignup from '@/components/pages/Signup.vue'
 import PageForgotPassword from '@/components/pages/ForgotPassword.vue'
 
-export enum AuthRouteNames {
-  AUTH = 'Auth',
-  SIGN_IN = 'SignIn',
-  SIGNUP = 'Signup',
-  FORGOT_PASSWORD = 'ForgotPassword',
-}
+import { AuthRouteNames } from '@/shared/enums'
 
 export const SignInRoute: RouteRecordRaw = {
   name: AuthRouteNames.SIGN_IN,

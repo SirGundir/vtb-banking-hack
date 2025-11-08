@@ -1,6 +1,6 @@
 import { useRouter } from 'vue-router'
 
-import { AuthRouteNames } from '@/router/routes/auth'
+import { AuthRouteNames } from '@/shared/enums'
 import { Configuration, type Middleware, type ErrorContext } from '@/api/runtime'
 import { useUserStore } from '@/stores/user'
 

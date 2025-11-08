@@ -184,7 +184,7 @@ import { Label as UiLabel } from '@/components/ui/label'
 import { Checkbox as UiCheckbox } from '@/components/ui/checkbox'
 
 import { type CreateUserDTO } from '@/api/models/CreateUserDTO'
-import { MeRouteNames } from '@/router/routes/me'
+import { MeRouteNames } from '@/shared/enums'
 import { useUserStore } from '@/stores/user'
 import { ResponseError } from '@/api/runtime'
 

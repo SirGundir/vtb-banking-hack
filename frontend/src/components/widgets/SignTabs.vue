@@ -15,7 +15,7 @@ import { computed, type HTMLAttributes } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
 import { Button as UiButton, type ButtonVariants } from '@/components/ui/button'
-import { AuthRouteNames } from '@/router/routes/auth'
+import { AuthRouteNames } from '@/shared/enums'
 
 defineOptions({
   name: 'WSignTabs',

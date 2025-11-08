@@ -1,20 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { toast } from 'vue-sonner'
 
-import {
-  MeRoute,
-  MeRouteNames,
-} from '@/router/routes/me'
+import { MeRoute } from '@/router/routes/me'
 import {
   OnboardingRoute,
 } from '@/router/routes/onboarding'
-import {
-  AuthRoute,
-  AuthRouteNames,
-} from '@/router/routes/auth'
+import { AuthRoute } from '@/router/routes/auth'
+import { MeRouteNames, AuthRouteNames } from '@/shared/enums'
 import {
   ProfileRoute,
 } from '@/router/routes/profile'
 import { useUserStore } from '@/stores/user'
+import { ResponseError } from '@/api/runtime'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -39,7 +36,14 @@ router.beforeEach(async (to, from, next) => {
     try {
       await userStore.getMe()
     } catch (error: unknown) {
-      console.error(error)
+      if (error instanceof ResponseError) {
+        const errorData = await (error as ResponseError).response.json()
+
+        toast.error(errorData.detail)
+      } else {
+        toast.error('Неизвестная ошибка')
+      }
+
       return next({ name: AuthRouteNames.SIGN_IN })
     }
   }

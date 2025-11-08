@@ -1,15 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-import LayoutOnboarding from '@/components/layouts/Onboarding.vue'
+import LayoutMe from '@/components/layouts/Me.vue'
 
 import PageBanks from '@/components/pages/Banks.vue'
 import PageSurvey from '@/components/pages/Survey.vue'
 
-export enum OnboardingRouteNames {
-  ONBOARDING = 'Onboarding',
-  BANKS = 'Banks',
-  SURVEY = 'Survey',
-}
+import { OnboardingRouteNames } from '@/shared/enums'
 
 export const OnboardingBanksRoute: RouteRecordRaw = {
   name: OnboardingRouteNames.BANKS,
@@ -33,7 +29,7 @@ export const OnboardingRoute: RouteRecordRaw = {
   name: OnboardingRouteNames.ONBOARDING,
   path: '/onboarding',
   redirect: { name: OnboardingRouteNames.BANKS },
-  component: LayoutOnboarding,
+  component: LayoutMe,
   children: [
     OnboardingBanksRoute,
     OnboardingSurveyRoute,

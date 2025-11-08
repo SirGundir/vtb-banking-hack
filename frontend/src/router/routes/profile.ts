@@ -1,13 +1,10 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-import LayoutProfile from '@/components/layouts/Profile.vue'
+import LayoutMe from '@/components/layouts/Me.vue'
 
 import PageProfileMain from '@/components/pages/ProfileMain.vue'
 
-export enum ProfileRouteNames {
-  PROFILE = 'Profile',
-  MAIN = 'Main',
-}
+import { ProfileRouteNames } from '@/shared/enums'
 
 export const ProfileMainRoute: RouteRecordRaw = {
   name: ProfileRouteNames.MAIN,
@@ -18,7 +15,7 @@ export const ProfileMainRoute: RouteRecordRaw = {
 export const ProfileRoute: RouteRecordRaw = {
   name: ProfileRouteNames.PROFILE,
   path: '/profile',
-  component: LayoutProfile,
+  component: LayoutMe,
   redirect: { name: ProfileRouteNames.MAIN },
   children: [
     ProfileMainRoute,

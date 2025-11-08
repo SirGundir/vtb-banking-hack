@@ -107,7 +107,7 @@ import { Input as UiInput } from '@/components/ui/input'
 import { Button as UiButton } from '@/components/ui/button'
 
 import { type LoginDTO } from '@/api/models/LoginDTO'
-import { MeRouteNames } from '@/router/routes/me'
+import { MeRouteNames } from '@/shared/enums'
 import { useUserStore } from '@/stores/user'
 import { ResponseError } from '@/api/runtime'
 

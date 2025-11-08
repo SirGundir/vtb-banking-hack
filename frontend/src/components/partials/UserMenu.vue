@@ -39,8 +39,7 @@ import {
 } from '@/components/ui/avatar'
 
 import { useUserStore } from '@/stores/user'
-import { AuthRouteNames } from '@/router/routes/auth'
-import { ProfileRouteNames } from '@/router/routes/profile'
+import { AuthRouteNames, ProfileRouteNames } from '@/shared/enums'
 
 defineOptions({
   name: 'PUserMenu',
