@@ -74,8 +74,7 @@ class ConnectBankService:
             raise AlreadyExistsError(f"Bank {bank_id} already connected to user")
 
         bank: BankDTO = await self.bank_service.get_bank(bank_id, update_access=True)
-        bank_client_id = f"team221-2"
-        print(f">>{bank=}")
+        bank_client_id = f"team221-1"
         consent_id = await self.bank_api.with_api_url(bank.api_url).create_consent(ConsentRequest(
             bank_client_id=bank_client_id,
             client_id=bank.client_id,
@@ -92,7 +91,6 @@ class ConnectBankService:
         logger.info(f"Connected bank {bank_id} to user {user.id}")
         async with self.broker as br:
             res = await br.publish(dict(user_id=str(user.id), bank_id=bank_id), DOWNLOAD_USER_ACCOUNT_TOPIC)
-        print(f">>>{consent_id=}, {bank_client_id=}, {res=}")
         logger.info(f"Schedule downloading user data for user {user.id}")
 
     async def reject_user_consent(self, bank_id: int, user: UserDTO):

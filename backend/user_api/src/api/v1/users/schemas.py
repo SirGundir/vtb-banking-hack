@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from pydantic import UUID4, BaseModel, Field, computed_field
 
 from application.auth.dto import ConsentDataDTO
@@ -18,3 +20,13 @@ class UserSchema(BaseModel):
     def connectedBanks(self) -> list[int]:
         return list(self.consents.keys())
 
+
+class UserTransactionsSchema(BaseModel):
+    user_id: UUID4 = Field(serialization_alias='userId')
+    bank_id: int= Field(serialization_alias='userId')
+    status: str
+    currency: str
+    amount: float
+    booking_dt: datetime = Field(serialization_alias='bookingDt')
+    value_dt: datetime = Field(serialization_alias='valueDt')
+    transaction_info: str = Field(serialization_alias='transactionInfo')

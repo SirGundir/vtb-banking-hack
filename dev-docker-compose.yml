@@ -52,6 +52,7 @@ services:
     env_file:
       - ./backend/user_api/.env
       - ./backend/postgres/.env
+      - ./backend/clickhouse/.env
     networks:
       - vtb_banking.user_api.network
       - vtb_banking.redis.network
@@ -115,7 +116,7 @@ services:
     hostname: vtb_banking.clickhouse
     profiles: ["data_loader"]
     image: clickhouse/clickhouse-server:25.7-alpine
-    env_file: ./backend/data_loader/.env
+    env_file: ./backend/clickhouse/.env
     volumes:
       - vtb_banking.clickhouse.data:/var/lib/clickhouse
       - ./backend/clickhouse:/docker-entrypoint-initdb.d

@@ -1,8 +1,9 @@
-from datetime import datetime
+from datetime import datetime, date
 from dataclasses import dataclass
 
 from pydantic import UUID4
 
+from application.users.dto import UserTransactionsDTO
 from infrastructure.repositories.users import UserStatsRepository
 
 
@@ -10,11 +11,11 @@ from infrastructure.repositories.users import UserStatsRepository
 class UserStatsService:
     stats_repository: UserStatsRepository
 
-    async def get_transactions(self, user_id: UUID4, from_dt: datetime, to_dt: datetime):
+    async def get_transactions(self, user_id: UUID4, date_from: date, date_to: date) -> list[UserTransactionsDTO]:
         transactions = await self.stats_repository.fetch_transactions(
+            returning_dto=UserTransactionsDTO,
             user_id=user_id,
-            from_dt=from_dt.strftime('%Y-%m-%d %H:%M:%S'),
-            to_dt=to_dt.strftime('%Y-%m-%d %H:%M:%S'),
+            from_dt=date_from.isoformat() if date_from else None,
+            to_dt=date_to.isoformat() if date_to else None,
         )
-        print(f">>>{transactions=}")
         return transactions

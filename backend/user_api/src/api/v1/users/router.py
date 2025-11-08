@@ -1,11 +1,11 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
 from api.v1.depends.auth import user_dep
 from api.v1.depends.di import di_container_dep
-from api.v1.users.schemas import UserSchema
+from api.v1.users.schemas import UserSchema, UserTransactionsSchema
 from application.users.services import UserStatsService
 
 router = APIRouter(prefix='/users')
@@ -25,11 +25,11 @@ async def get_me(
     return user
 
 
-@router.get('/me/transactions/', tags=['users'])
+@router.get('/me/transactions/', tags=['users'], response_model=list[UserTransactionsSchema])
 async def get_me_transactions(
     user: user_dep,
     stats_service: stats_service_dep,
-    from_dt: datetime | None = None,
-    to_dt: datetime | None = None,
+    date_from: date | None = None,
+    date_to: date | None = None,
 ):
-    return await stats_service.get_transactions(user.id, from_dt=from_dt, to_dt=to_dt)
+    return await stats_service.get_transactions(user.id, date_from=date_from, date_to=date_to)

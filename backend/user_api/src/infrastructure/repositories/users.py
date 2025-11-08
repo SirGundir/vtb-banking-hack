@@ -34,42 +34,39 @@ class UserStatsRepository(RepositoryInterface):
     ch_client: ChClient
 
     async def fetch_transactions(self, returning_dto: Type[BaseModelDTO], **filters) -> list[BaseModelDTO]:
-        user_id = filters.get("user_id")
+        user_id = filters['user_id']
         from_dt = filters.get("from_dt")
         to_dt = filters.get("to_dt")
 
-        sql = """
-                SELECT  user_id
-                      , bank_id
-                      , account_id
-                      , status
-                      , transaction_info
-                      , currency
-                      , amount
-                      , bank_transaction_code
-                      , booking_dt
-                      , value_dt
-                FROM transactions FINAL
-                WHERE user_id = '{user_id}'
-            """.format(user_id=user_id)
-
+        filter_stmt = ''
         if from_dt and to_dt:
-            sql += f"""
-            AND booking_dt BETWEEN toDateTime('{from_dt}') AND toDateTime('{to_dt}')
-            """
+            filter_stmt = f"AND booking_dt BETWEEN toDateTime('{from_dt}') AND toDateTime('{to_dt}')"
+
         elif from_dt:
-            sql += f"""
-            AND booking_dt >= toDateTime('{from_dt}')
-            """
+            filter_stmt  = f"AND booking_dt >= toDateTime('{from_dt}')"
+
         elif to_dt:
-            sql += f"""
-            AND booking_dt <= toDateTime('{to_dt}')
-            """
+            filter_stmt = f"AND booking_dt <= toDateTime('{to_dt}')"
 
-        sql += """
-        ORDER BY booking_dt DESC;
-        """
+        sql = """
+            SELECT  
+                user_id,
+                bank_id,
+                account_id,
+                status,
+                transaction_info,
+                currency,
+                amount,
+                bank_transaction_code,
+                booking_dt,
+                value_dt
+            FROM transactions FINAL
+            WHERE user_id = '{user_id}'
+            {filter_stmt}
+            ORDER BY booking_dt DESC
+        """.format(user_id=user_id, filter_stmt=filter_stmt)
 
+        #print(f">>{sql}")
         records = await self.ch_client.fetch(sql)
         return [returning_dto(**record) for record in records]
 
