@@ -68,7 +68,8 @@ services:
   data_loader: &worker
     container_name: vtb_banking.data_loader
     hostname: vtb_banking.data_loader
-    profiles: ["data_loader"]
+    profiles:
+      - backend
     build:
       context: ./backend/data_loader
     volumes:
@@ -89,7 +90,8 @@ services:
   kafka:
     container_name: vtb_banking.kafka
     hostname: vtb_banking.kafka
-    profiles: [ "data_loader" ]
+    profiles:
+      - backend
     image: apache/kafka:latest
     environment:
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
@@ -114,7 +116,10 @@ services:
   clickhouse:
     container_name: vtb_banking.clickhouse
     hostname: vtb_banking.clickhouse
-    profiles: ["data_loader"]
+    profiles:
+      - backend
+    build:
+      context: ./backend/clickhouse
     image: clickhouse/clickhouse-server:25.7-alpine
     env_file: ./backend/clickhouse/.env
     volumes:
