@@ -95,10 +95,6 @@ class HttpBankClient(BankOpenApiInterface):
             'Authorization': f"Bearer {request.access_token}",
             'X-Requesting-Bank': request.client_id
         }
-        params = {
-            'client_id': request.client_id,
-            'client_secret': request.client_secret
-        }
         payload = {
           "client_id": request.bank_client_id,
           "permissions": ["ReadAccountsDetail", "ReadBalances", "ReadTransactionsDetail"],
@@ -111,14 +107,13 @@ class HttpBankClient(BankOpenApiInterface):
                 'account-consents/request',
                 method='POST',
                 headers=headers,
-                params=params,
                 json=payload
             )
         except ClientError as exc:
             raise GetConsentError(f"Cant create consent") from exc
 
         if data.get('status') != 'approved':
-            raise GetConsentError(data.get('message'))
+            raise GetConsentError(str(data))
 
         return data.get('consent_id')
 

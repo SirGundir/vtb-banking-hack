@@ -40,9 +40,9 @@ class UserModel(TimestampedMixin, Base):
 
     language = mapped_column(String(3), default='ru')
 
-    updated_accounts = mapped_column(DateTime(timezone=True), nullable=True, default=None)
-    updated_balances = mapped_column(DateTime(timezone=True), nullable=True, default=None)
-    updated_transactions = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    # updated_accounts = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    # updated_balances = mapped_column(DateTime(timezone=True), nullable=True, default=None)
+    # updated_transactions = mapped_column(DateTime(timezone=True), nullable=True, default=None)
 
     date_joined = mapped_column(DateTime(timezone=True), default=utcnow)
 

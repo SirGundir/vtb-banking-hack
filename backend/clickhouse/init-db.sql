@@ -55,7 +55,9 @@ CREATE TABLE kafka_transactions
     transaction_info String,
     currency String,
     amount Decimal64(2),
-    bank_transaction_code String
+    bank_transaction_code String,
+    booking_dt DateTime,
+    value_dt DateTime
 )
 ENGINE = Kafka()
 SETTINGS
@@ -67,7 +69,6 @@ SETTINGS
     stream_flush_interval_ms = 500,
     kafka_max_block_size = 1000;
 
-
 CREATE TABLE kafka_bank_products
 (
     bank_id Int64,
@@ -78,7 +79,7 @@ CREATE TABLE kafka_bank_products
     interest_rate Nullable(Decimal64(2)),
     min_amount Nullable(Decimal64(2)),
     max_amount Nullable(Decimal64(2)),
-    term_months (Int64)
+    term_months Nullable(Int64)
 )
 ENGINE = Kafka()
 SETTINGS
@@ -131,7 +132,9 @@ CREATE TABLE transactions
     transaction_info String,
     currency String,
     amount Decimal64(2),
-    bank_transaction_code String
+    bank_transaction_code String,
+    booking_dt DateTime,
+    value_dt DateTime
 )
 ENGINE = ReplacingMergeTree()
 ORDER BY (user_id, bank_id, account_id, transaction_id);

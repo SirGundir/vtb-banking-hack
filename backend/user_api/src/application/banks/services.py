@@ -53,7 +53,7 @@ class BankService:
 
     async def get_bank(self, bank_id: int, update_access: bool = False) -> BankDTO:
         bank: BankDTO = await self.bank_repository.fetch(returning_dto=BankDTO, id=bank_id)
-        if update_access and bank.access_expired:
+        if True:
             access_data = await self.bank_api.with_api_url(bank.api_url).get_bank_token(
                 bank.client_id, bank.client_secret
             )
@@ -74,7 +74,8 @@ class ConnectBankService:
             raise AlreadyExistsError(f"Bank {bank_id} already connected to user")
 
         bank: BankDTO = await self.bank_service.get_bank(bank_id, update_access=True)
-        bank_client_id = f"team221-1"
+        bank_client_id = f"team221-2"
+        print(f">>{bank=}")
         consent_id = await self.bank_api.with_api_url(bank.api_url).create_consent(ConsentRequest(
             bank_client_id=bank_client_id,
             client_id=bank.client_id,

@@ -2,6 +2,7 @@ from typing import Callable
 
 import aiohttp
 import orjson
+from aiochclient import ChClient
 from faststream.kafka import KafkaBroker
 from redis.asyncio import ConnectionPool
 from sqlalchemy import NullPool
@@ -10,15 +11,17 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from application.auth.services.access_control import AccessControl
 from application.auth.services.password import PasswordService
 from application.banks.services import BankService, ConnectBankService
+from application.users.services import UserStatsService
 from infrastructure.blacklist import TokenBlacklist
 from infrastructure.clients import BankOpenApiInterface, HttpBankClient
 from infrastructure.config.app import AppConfig
+from infrastructure.config.clickhouse import ClickhouseConfig
 from infrastructure.config.db import PgConfig
 from infrastructure.config.kafka import KafkaConfig
 from infrastructure.config.redis import RedisConfig
 from infrastructure.di.di_container import DIContainer
 from infrastructure.repositories.banks import BankRepository
-from infrastructure.repositories.users import UserRepository
+from infrastructure.repositories.users import UserRepository, UserStatsRepository
 from utils.event_loop import safe_get_loop
 
 
@@ -50,9 +53,11 @@ def di_container_factory(
     app_config: AppConfig,
     redis_config: RedisConfig,
     pg_config: PgConfig,
+    ch_config: ClickhouseConfig,
     redis_pool_factory: Callable,
     http_session_factory: Callable,
-    pg_engine_factory: Callable
+    pg_engine_factory: Callable,
+    clickhouse_factory: Callable
 ) -> DIContainer:
     container = DIContainer()
 
@@ -62,10 +67,12 @@ def di_container_factory(
     container.register_singleton(AsyncEngine, lambda: pg_engine_factory(pg_config))
     container.register_singleton(ConnectionPool, lambda: redis_pool_factory(redis_config))
     container.register_singleton(aiohttp.ClientSession, http_session_factory)
+    container.register_singleton(ChClient, lambda: clickhouse_factory(ch_config))
     container.register_instance(KafkaBroker, KafkaBroker(KafkaConfig().broker_url))
     # repositories
     container.register(UserRepository)
     container.register(BankRepository)
+    container.register(UserStatsRepository)
     # caches
     container.register(TokenBlacklist)
     # etc
@@ -75,5 +82,6 @@ def di_container_factory(
     container.register(PasswordService)
     container.register(BankService)
     container.register(ConnectBankService)
+    container.register(UserStatsService)
     return container
 

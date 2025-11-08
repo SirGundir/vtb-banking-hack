@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 from typing import TypedDict, AsyncIterator
 
 import aiohttp
+from aiochclient import ChClient
 from fastapi import HTTPException, Request, FastAPI, APIRouter
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
@@ -12,7 +13,9 @@ from starlette.responses import JSONResponse
 
 from application.auth.exceptions import PasswordValidationError, AuthorizationError, ForbiddenError, CredentialsError
 from core.exceptions import ValidateDataError, ActionNotAllowedError
+from infrastructure.clickhouse.http import init_clickhouse_client
 from infrastructure.config.app import AppConfig
+from infrastructure.config.clickhouse import ClickhouseConfig
 from infrastructure.config.db import PgConfig
 from infrastructure.config.redis import RedisConfig
 from infrastructure.db.exceptions import AlreadyExistsError, DoesNotExists
@@ -116,17 +119,21 @@ async def lifespan(app: FastAPI) -> AsyncIterator[State]:
         app_config=AppConfig(),
         redis_config=RedisConfig(),
         pg_config=PgConfig(),
+        ch_config=ClickhouseConfig(),
         redis_pool_factory=init_redis_pool,
         http_session_factory=init_http_session,
-        pg_engine_factory=init_pg_engine
+        pg_engine_factory=init_pg_engine,
+        clickhouse_factory=init_clickhouse_client
     )
     redis_pool: ConnectionPool = di_container.resolve(ConnectionPool)
     http_session: aiohttp.ClientSession = di_container.resolve(aiohttp.ClientSession)
+    ch_client: ChClient = di_container.resolve(ChClient)
     try:
         yield State(di_container=di_container)
     finally:
         await redis_pool.aclose()
         await http_session.close()
+        await ch_client.close()
 
 
 def init_app(

@@ -66,6 +66,14 @@ class AccountTransactionDTO(AccountAmountDataDTO):
     def get_bank_transaction_code(cls, value: dict) -> str:
         return value.get('code')
 
+    @field_serializer('value_dt')
+    def serialize_value_dt(self, v: datetime):
+        return v.strftime('%Y-%m-%d %H:%M:%S')
+
+    @field_serializer('booking_dt')
+    def serialize_booking_dte(self, v: datetime):
+        return v.strftime('%Y-%m-%d %H:%M:%S')
+
 
 class ConsentDataDTO(BaseModelDTO):
     bank_client_id: str
