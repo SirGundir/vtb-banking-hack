@@ -8,7 +8,7 @@ up_d_be:
 	@docker compose --profile backend -f dev-docker-compose.yml up -d
 
 build_be:
-	@docker compose --profile backend -f dev-docker-compose.yml build
+	@docker compose --profile backend -f dev-docker-compose.yml build --no-cache
 
 user_api_sh:
 	@docker compose -f dev-docker-compose.yml exec user_api bash
