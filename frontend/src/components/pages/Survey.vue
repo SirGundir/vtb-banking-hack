@@ -1,9 +1,9 @@
 <template>
-  <div>PageAccount</div>
+  <div>PageSurvey</div>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: 'PageAccount',
+  name: 'PageSurvey',
 })
 </script>

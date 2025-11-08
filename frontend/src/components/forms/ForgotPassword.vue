@@ -53,6 +53,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { toast } from 'vue-sonner'
 import { toTypedSchema } from '@vee-validate/zod'
 import { object, email, type ZodType } from 'zod'
 
@@ -69,6 +70,8 @@ import {
 } from '@/components/ui/form'
 import { Input as UiInput } from '@/components/ui/input'
 import { Button as UiButton } from '@/components/ui/button'
+
+import { ResponseError } from '@/api/runtime'
 
 import { type ResetPasswordDTO } from '@/api/models/ResetPasswordDTO'
 import { useUserStore } from '@/stores/user'
@@ -98,7 +101,13 @@ const handleSubmit = async (values: any) => {
 
     await resetEmail(submittedForm.email)
   } catch (error) {
-    console.error(error)
+    if (error instanceof ResponseError) {
+      const errorData = await (error as ResponseError).response.json()
+
+      return toast.error(errorData.detail)
+    }
+
+    toast.error('Неизвестная ошибка')
   } finally {
     loading.value = false
   }

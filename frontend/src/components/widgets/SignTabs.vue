@@ -41,14 +41,14 @@ const links = computed(() => {
   return [
     {
       label: 'Вход',
-      to: '/signin',
+      to: { name: AuthRouteNames.SIGN_IN },
       as: isSignIn ? 'span' : RouterLink,
       isActive: isSignIn,
       buttonProps: getButtonProps(isSignIn),
     },
     {
       label: 'Регистрация',
-      to: '/signup',
+      to: { name: AuthRouteNames.SIGNUP },
       as: isSignup ? 'span' : RouterLink,
       isActive: isSignup,
       buttonProps: getButtonProps(isSignup),

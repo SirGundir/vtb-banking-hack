@@ -5,9 +5,15 @@ import {
   MeRouteNames,
 } from '@/router/routes/me'
 import {
+  OnboardingRoute,
+} from '@/router/routes/onboarding'
+import {
   AuthRoute,
   AuthRouteNames,
 } from '@/router/routes/auth'
+import {
+  ProfileRoute,
+} from '@/router/routes/profile'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -19,6 +25,8 @@ const router = createRouter({
     },
     MeRoute,
     AuthRoute,
+    OnboardingRoute,
+    ProfileRoute,
   ],
 })
 

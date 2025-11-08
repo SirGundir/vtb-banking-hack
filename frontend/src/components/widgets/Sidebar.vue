@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { LayoutDashboard, CreditCard, Wallet, WalletCards, Banknote, type LucideIcon } from 'lucide-vue-next'
+import { LayoutDashboard, type LucideIcon } from 'lucide-vue-next'
 import {
   Sidebar as UiSidebar,
   SidebarContent as UiSidebarContent,
@@ -49,26 +49,6 @@ const links: ISidebarLink[] = [
     label: 'Панель мониторинга',
     name: MeRouteNames.DASHBOARD,
     icon: LayoutDashboard,
-  },
-  {
-    label: 'Вклады/Депозиты',
-    name: MeRouteNames.DEPOSIT,
-    icon: Wallet,
-  },
-  {
-    label: 'Карты',
-    name: MeRouteNames.CARD,
-    icon: WalletCards,
-  },
-  {
-    label: 'Расчетные счета',
-    name: MeRouteNames.ACCOUNT,
-    icon: Banknote,
-  },
-  {
-    label: 'Кредиты',
-    name: MeRouteNames.LOAN,
-    icon: CreditCard,
   },
 ]
 </script>

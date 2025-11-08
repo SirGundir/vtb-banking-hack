@@ -1,34 +1,28 @@
 
-# UserSchema
+# AddBankDTO
 
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`id` | string
-`email` | string
-`language` | string
-`firstName` | string
-`lastName` | string
-`emailVerified` | boolean
-`connectedBanks` | Array&lt;number&gt;
+`name` | string
+`apiUrl` | string
+`clientId` | string
+`clientSecret` | string
 
 ## Example
 
 ```typescript
-import type { UserSchema } from ''
+import type { AddBankDTO } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "id": null,
-  "email": null,
-  "language": null,
-  "firstName": null,
-  "lastName": null,
-  "emailVerified": null,
-  "connectedBanks": null,
-} satisfies UserSchema
+  "name": null,
+  "apiUrl": null,
+  "clientId": null,
+  "clientSecret": null,
+} satisfies AddBankDTO
 
 console.log(example)
 
@@ -37,7 +31,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as UserSchema
+const exampleParsed = JSON.parse(exampleJSON) as AddBankDTO
 console.log(exampleParsed)
 ```
 

@@ -165,6 +165,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { toast } from 'vue-sonner'
 import { useRouter } from 'vue-router'
 import { toTypedSchema } from '@vee-validate/zod'
 import { object, string, email, type ZodType } from 'zod'
@@ -185,6 +186,7 @@ import { Checkbox as UiCheckbox } from '@/components/ui/checkbox'
 import { type CreateUserDTO } from '@/api/models/CreateUserDTO'
 import { MeRouteNames } from '@/router/routes/me'
 import { useUserStore } from '@/stores/user'
+import { ResponseError } from '@/api/runtime'
 
 const { signUp } = useUserStore()
 const router = useRouter()
@@ -211,8 +213,7 @@ const initialValues: CreateUserDTO = {
 const isAgreed = ref(false)
 const loading = ref(false)
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleSubmit = async (values: any) => {
+const handleSubmit = async (values: unknown) => {
   const submittedForm = values as typeof initialValues
 
   try {
@@ -221,7 +222,13 @@ const handleSubmit = async (values: any) => {
     await signUp(submittedForm)
     router.push({ name: MeRouteNames.DASHBOARD })
   } catch (error) {
-    console.error(error)
+    if (error instanceof ResponseError) {
+      const errorData = await (error as ResponseError).response.json()
+
+      return toast.error(errorData.detail)
+    }
+
+    toast.error('Неизвестная ошибка')
   } finally {
     loading.value = false
   }

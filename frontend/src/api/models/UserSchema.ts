@@ -55,6 +55,12 @@ export interface UserSchema {
      * @memberof UserSchema
      */
     emailVerified?: boolean;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UserSchema
+     */
+    connectedBanks: Array<number>;
 }
 
 /**
@@ -64,6 +70,7 @@ export function instanceOfUserSchema(value: object): value is UserSchema {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('language' in value) || value['language'] === undefined) return false;
+    if (!('connectedBanks' in value) || value['connectedBanks'] === undefined) return false;
     return true;
 }
 
@@ -83,6 +90,7 @@ export function UserSchemaFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'firstName': json['firstName'] == null ? undefined : json['firstName'],
         'lastName': json['lastName'] == null ? undefined : json['lastName'],
         'emailVerified': json['emailVerified'] == null ? undefined : json['emailVerified'],
+        'connectedBanks': json['connectedBanks'],
     };
 }
 
@@ -103,6 +111,7 @@ export function UserSchemaToJSONTyped(value?: UserSchema | null, ignoreDiscrimin
         'firstName': value['firstName'],
         'lastName': value['lastName'],
         'emailVerified': value['emailVerified'],
+        'connectedBanks': value['connectedBanks'],
     };
 }
 

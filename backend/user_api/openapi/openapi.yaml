@@ -220,30 +220,34 @@ paths:
       security:
       - HTTPBearer: []
       parameters:
-      - name: from_dt
+      - name: date_from
         in: query
         required: false
         schema:
           anyOf:
           - type: string
-            format: date-time
+            format: date
           - type: 'null'
-          title: From Dt
-      - name: to_dt
+          title: Date From
+      - name: date_to
         in: query
         required: false
         schema:
           anyOf:
           - type: string
-            format: date-time
+            format: date
           - type: 'null'
-          title: To Dt
+          title: Date To
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
-              schema: {}
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserTransactionsSchema'
+                title: Response Get Me Transactions Api V1 Users Me Transactions  Get
         '422':
           description: Validation Error
           content:
@@ -566,6 +570,42 @@ components:
       - language
       - connectedBanks
       title: UserSchema
+    UserTransactionsSchema:
+      properties:
+        userId:
+          type: integer
+          title: Userid
+        status:
+          type: string
+          title: Status
+        currency:
+          type: string
+          title: Currency
+        amount:
+          type: number
+          title: Amount
+        bookingDt:
+          type: string
+          format: date-time
+          title: Bookingdt
+        valueDt:
+          type: string
+          format: date-time
+          title: Valuedt
+        transactionInfo:
+          type: string
+          title: Transactioninfo
+      type: object
+      required:
+      - userId
+      - userId
+      - status
+      - currency
+      - amount
+      - bookingDt
+      - valueDt
+      - transactionInfo
+      title: UserTransactionsSchema
     ValidationError:
       properties:
         loc:

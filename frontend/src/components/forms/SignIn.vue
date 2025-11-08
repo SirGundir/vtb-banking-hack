@@ -95,6 +95,7 @@ import {
   Field as VeeField,
 } from 'vee-validate'
 import { useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
 
 import {
   FormItem as UiFormItem,
@@ -108,6 +109,7 @@ import { Button as UiButton } from '@/components/ui/button'
 import { type LoginDTO } from '@/api/models/LoginDTO'
 import { MeRouteNames } from '@/router/routes/me'
 import { useUserStore } from '@/stores/user'
+import { ResponseError } from '@/api/runtime'
 
 const { signIn } = useUserStore()
 const router = useRouter()
@@ -137,8 +139,18 @@ const handleSubmit = async (values: any) => {
 
     await signIn(submittedForm)
     router.push({ name: MeRouteNames.DASHBOARD })
-  } catch (error) {
-    console.error(error)
+  } catch (error: unknown) {
+    if (error instanceof ResponseError && error.response.status === 404) {
+      return toast.error('Такого пользователя не существует')
+    }
+    if (error instanceof ResponseError && error.response.status === 401) {
+      return toast.error('Неверный логин или пароль')
+    }
+    if (error instanceof ResponseError && error.response.status === 500) {
+      return toast.error('Ошибка сервера')
+    }
+    
+    toast.error('Неизвестная ошибка')
   } finally {
     loading.value = false
   }

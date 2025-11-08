@@ -1,8 +1,13 @@
 apis/AuthApi.ts
+apis/BankApi.ts
 apis/UsersApi.ts
 apis/index.ts
+docs/AddBankDTO.md
 docs/AuthApi.md
+docs/BankApi.md
+docs/BankSchema.md
 docs/ChangePasswordDTO.md
+docs/ConsentDataDTO.md
 docs/CreateUserDTO.md
 docs/HTTPValidationError.md
 docs/JwtTokensDTO.md
@@ -14,11 +19,15 @@ docs/ResetPasswordDTO.md
 docs/SetPasswordDTO.md
 docs/Status.md
 docs/UserSchema.md
+docs/UserTransactionsSchema.md
 docs/UsersApi.md
 docs/ValidationError.md
 docs/ValidationErrorLocInner.md
 index.ts
+models/AddBankDTO.ts
+models/BankSchema.ts
 models/ChangePasswordDTO.ts
+models/ConsentDataDTO.ts
 models/CreateUserDTO.ts
 models/HTTPValidationError.ts
 models/JwtTokensDTO.ts
@@ -30,6 +39,7 @@ models/ResetPasswordDTO.ts
 models/SetPasswordDTO.ts
 models/Status.ts
 models/UserSchema.ts
+models/UserTransactionsSchema.ts
 models/ValidationError.ts
 models/ValidationErrorLocInner.ts
 models/index.ts

@@ -15,12 +15,16 @@ const authApi = new AuthApi()
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserSchema | null>(null)
   const isGetMeLoading = ref(false)
-  
+
   const accessToken = useStorage<JwtTokensDTO['accessToken'] | null>('accessToken', null)
   const refreshToken = useStorage<JwtTokensDTO['refreshToken'] | null>('refreshToken', null)
 
   const isAuthenticated = computed(() => {
     return !!accessToken.value && !!refreshToken.value && user.value !== null
+  })
+
+  const hasConnectedBanks = computed(() => {
+    return (user.value?.connectedBanks.length ?? 0) > 0
   })
 
   /**
@@ -35,7 +39,6 @@ export const useUserStore = defineStore('user', () => {
       refreshToken.value = response.refreshToken
       return Promise.resolve(response)
     } catch (error) {
-      console.error(error)
       return Promise.reject(error)
     }
   }
@@ -52,7 +55,6 @@ export const useUserStore = defineStore('user', () => {
       refreshToken.value = response.refreshToken
       return Promise.resolve(response)
     } catch (error) {
-      console.error(error)
       return Promise.reject(error)
     }
   }
@@ -96,8 +98,7 @@ export const useUserStore = defineStore('user', () => {
       refreshToken.value = response.refreshToken
 
       return Promise.resolve(response)
-    } catch (error) {
-      console.error(error)
+    } catch (error: unknown) {
       return Promise.reject(error)
     }
   }
@@ -151,6 +152,7 @@ export const useUserStore = defineStore('user', () => {
     accessToken,
     refreshToken,
     isAuthenticated,
+    hasConnectedBanks,
     signIn,
     signUp,
     signOut,

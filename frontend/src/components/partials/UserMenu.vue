@@ -7,8 +7,8 @@
     </UiDropdownMenuTrigger>
     <UiDropdownMenuContent>
       <UiDropdownMenuItem as-child>
-        <RouterLink :to="{ name: MeRouteNames.PROFILE }" class="cursor-pointer w-full">
-          Настройки профиля
+        <RouterLink :to="{ name: ProfileRouteNames.MAIN }" class="cursor-pointer w-full">
+          Мой профиль
         </RouterLink>
       </UiDropdownMenuItem>
       <UiDropdownMenuSeparator />
@@ -40,7 +40,7 @@ import {
 
 import { useUserStore } from '@/stores/user'
 import { AuthRouteNames } from '@/router/routes/auth'
-import { MeRouteNames } from '@/router/routes/me'
+import { ProfileRouteNames } from '@/router/routes/profile'
 
 defineOptions({
   name: 'PUserMenu',

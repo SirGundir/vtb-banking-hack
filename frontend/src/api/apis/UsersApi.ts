@@ -15,12 +15,23 @@
 
 import * as runtime from '../runtime';
 import type {
+  HTTPValidationError,
   UserSchema,
+  UserTransactionsSchema,
 } from '../models/index';
 import {
+    HTTPValidationErrorFromJSON,
+    HTTPValidationErrorToJSON,
     UserSchemaFromJSON,
     UserSchemaToJSON,
+    UserTransactionsSchemaFromJSON,
+    UserTransactionsSchemaToJSON,
 } from '../models/index';
+
+export interface GetMeTransactionsApiV1UsersMeTransactionsGetRequest {
+    dateFrom?: Date | null;
+    dateTo?: Date | null;
+}
 
 /**
  * 
@@ -61,6 +72,51 @@ export class UsersApi extends runtime.BaseAPI {
      */
     async getMeApiV1UsersMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSchema> {
         const response = await this.getMeApiV1UsersMeGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get Me Transactions
+     */
+    async getMeTransactionsApiV1UsersMeTransactionsGetRaw(requestParameters: GetMeTransactionsApiV1UsersMeTransactionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserTransactionsSchema>>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['dateFrom'] != null) {
+            queryParameters['date_from'] = requestParameters['dateFrom'];
+        }
+
+        if (requestParameters['dateTo'] != null) {
+            queryParameters['date_to'] = requestParameters['dateTo'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("HTTPBearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/v1/users/me/transactions/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserTransactionsSchemaFromJSON));
+    }
+
+    /**
+     * Get Me Transactions
+     */
+    async getMeTransactionsApiV1UsersMeTransactionsGet(requestParameters: GetMeTransactionsApiV1UsersMeTransactionsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserTransactionsSchema>> {
+        const response = await this.getMeTransactionsApiV1UsersMeTransactionsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -1,9 +1,0 @@
-<template>
-  <div>PageProfile</div>
-</template>
-
-<script setup lang="ts">
-defineOptions({
-  name: 'PageProfile',
-})
-</script>
