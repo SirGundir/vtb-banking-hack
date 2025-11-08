@@ -211,6 +211,45 @@ paths:
                 $ref: '#/components/schemas/UserSchema'
       security:
       - HTTPBearer: []
+  /api/v1/users/me/transactions/:
+    get:
+      tags:
+      - users
+      summary: Get Me Transactions
+      operationId: get_me_transactions_api_v1_users_me_transactions__get
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: from_dt
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: From Dt
+      - name: to_dt
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: To Dt
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /api/v1/banks/:
     get:
       tags:
@@ -247,6 +286,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/banks/{bankId}/reject-consent/:
+    post:
+      tags:
+      - bank
+      summary: Reject Consent
+      operationId: reject_consent_api_v1_banks__bankId__reject_consent__post
+      security:
+      - HTTPBearer: []
+      parameters:
+      - name: bankId
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Bankid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponseSchema'
         '422':
           description: Validation Error
           content:
@@ -477,6 +544,11 @@ components:
           - type: string
           - type: 'null'
           title: Firstname
+        lastName:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lastname
         emailVerified:
           type: boolean
           title: Emailverified
