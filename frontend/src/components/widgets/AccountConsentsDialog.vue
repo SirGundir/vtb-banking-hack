@@ -7,8 +7,11 @@
           Для того чтобы мы могли предоставить вам наиболее точные рекомендации, нам необходимо получить доступ к информации по вашим счетам.
         </UiDialogDescription>
       </UiDialogHeader>
+      <UiSeparator />
       <div class="flex flex-col gap-4">
-        <p>Вы даёте свое согласие приложению «OneBank»<br />на обработку ваших персональных данных и получение информации о ваших счетах, балансах и транзакциях из выбранного банка в соответствии со ст. 9 Ф3 Nº152 «О персональных данных» и стандартами Банка России (СТО БР ФАПИ. СЕК-1.6-2024).<br />Вы даёте своё согласие приложению "OneBank"<br />на обработку ваших персональных данных и получение информации о ваших счетах.</p>
+        <p class="text-sm">Вы даёте свое согласие приложению «OneBank»<br />на обработку ваших персональных данных и получение информации о ваших счетах, балансах и транзакциях из банка <span class="font-medium">"{{ bankName }}"</span> в соответствии со ст. 9 Ф3 Nº152 «О персональных данных» и стандартами Банка России (СТО БР ФАПИ. СЕК-1.6-2024).<br /><br />Вы даёте своё согласие приложению "OneBank"<br />на обработку ваших персональных данных и получение информации о ваших счетах.</p>
+
+        <UiSeparator />
 
         <div class="flex flex-col gap-2">
           <div
@@ -16,27 +19,32 @@
             :key="consentKey"
             class="flex items-center gap-2"
           >
-            <UiCheckbox v-model="consent.value" />
-            <UiLabel :for="consentKey">{{ consent.label }}</UiLabel>
+            <UiCheckbox v-model="consent.value" :id="`consent-${consentKey}`" />
+            <UiLabel :for="`consent-${consentKey}`">{{ consent.label }}</UiLabel>
           </div>
         </div>
       </div>
+      <UiSeparator />
       <UiDialogFooter class="sm:justify-end">
         <UiDialogClose as-child>
           <UiButton type="button" variant="secondary">
             Закрыть
           </UiButton>
-          <UiButton type="button" @click="$emit('submit')">
-            Отправить
-          </UiButton>
         </UiDialogClose>
+        <UiButton
+          type="button"
+          :disabled="isDisabledSubmit || loading"
+          @click="$emit('submit')"
+        >
+          {{ loading ? 'Загрузка...' : 'Отправить' }}
+        </UiButton>
       </UiDialogFooter>
     </UiDialogContent>
   </UiDialog>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useVModel } from '@vueuse/core'
 
 import {
@@ -51,6 +59,7 @@ import {
 import { Button as UiButton } from '@/components/ui/button'
 import { Checkbox as UiCheckbox } from '@/components/ui/checkbox'
 import { Label as UiLabel } from '@/components/ui/label'
+import { Separator as UiSeparator } from '@/components/ui/separator'
 
 defineOptions({
   name: 'WAccountConsentsDialog',
@@ -58,6 +67,8 @@ defineOptions({
 
 const props = defineProps<{
   open: boolean
+  loading: boolean
+  bankName: string
 }>()
 
 const emits = defineEmits<{
@@ -93,5 +104,9 @@ const consents = reactive<Record<TConsent, IConsent>>({
     value: false,
     label: 'Я ознакомлен с политикой конфиденциальности.'
   }
+})
+
+const isDisabledSubmit = computed(() => {
+  return Object.values(consents).some(consent => !consent.value)
 })
 </script>

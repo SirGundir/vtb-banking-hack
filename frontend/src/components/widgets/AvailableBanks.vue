@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div
       v-for="bank in AVAILABLE_BANKS"
       :key="bank.id"
@@ -15,43 +15,39 @@
         <span>{{ bank.ruName }}</span>
       </div>
       <UiButton
-        v-if="!isBankAdded(bank.name)"
         variant="outline"
         size="sm"
-        :disabled="mapBanksToLoading[bank.name] || isGetBanksLoading"
-        @click="addBank(bank)"
+        :disabled="getBankButtonDisabled(bank.name)"
+        @click="getBankButtonClick(bank.name)(bank)"
       >
-        {{
-          mapBanksToLoading[bank.name]
-            ? 'Загрузка...'
-            : 'Добавить'
-        }}
-      </UiButton>
-      <UiButton
-        v-else
-        variant="outline"
-        size="sm"
-        :disabled="mapBanksToLoading[bank.name] || isGetBanksLoading"
-        @click="isBankConsented(bank.name) ? rejectConsent(bank) : consentBank(bank)"
-      >
-        {{
-          mapBanksToLoading[bank.name]
-            ? 'Загрузка...'
-            : isBankConsented(bank.name)
-              ? 'Отозвать согласие'
-              : 'Согласие на подключение'
-        }}
+        {{ getBankButtonText(bank.name) }}
       </UiButton>
     </div>
+    <WAccountConsentsDialog
+      v-if="processingBank"
+      v-model:open="showAccountConsentsDialog"
+      :bank-name="processingBank.name"
+      :loading="mapBanksToLoading[processingBank.name]"
+      @submit="consentBank(processingBank)"
+    />
+    <WRejectConsentsDialog
+      v-if="processingBank"
+      v-model:open="showRejectConsentsAlertDialog"
+      :loading="mapBanksToLoading[processingBank.name]"
+      @submit="rejectConsent(processingBank)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import { storeToRefs } from 'pinia'
 
 import { Button as UiButton } from '@/components/ui/button'
+
+import WAccountConsentsDialog from '@/components/widgets/AccountConsentsDialog.vue'
+import WRejectConsentsDialog from '@/components/widgets/RejectConsentsDialog.vue'
 
 import { ResponseError } from '@/api/runtime'
 
@@ -68,6 +64,9 @@ defineOptions({
 
 type TMapBanksToLoading = Record<TBankName, boolean>
 
+const processingBank = ref<TBank>()
+const showAccountConsentsDialog = ref(false)
+const showRejectConsentsAlertDialog = ref(false)
 const mapBanksToLoading = reactive<TMapBanksToLoading>(Object.values(EBankName).reduce((acc, bank) => {
   acc[bank] = false
   return acc
@@ -119,13 +118,13 @@ const addBank = async ({ name, apiUrl }: TBank) => {
 
     getBanks()
 
-    toast.success('Банк успешно подключен')
+    toast.success('Банк успешно добавлен')
   } catch (error) {
     if (error instanceof ResponseError) {
       const errorData = await (error as ResponseError).response.json()
 
       if (errorData.detail === 'Already exists. Already exists.') {
-        return toast.error('Банк уже подключен')
+        return toast.error('Банк уже добавлен')
       }
     }
     
@@ -142,6 +141,9 @@ const consentBank = async ({ name }: TBank) => {
     await banksStore.consentBank(mapBanksToName.value[name].id)
 
     getUser()
+
+    processingBank.value = undefined
+    showAccountConsentsDialog.value = false
 
     toast.success('Согласие на подключение успешно дано')
   } catch (error) {
@@ -165,6 +167,9 @@ const rejectConsent = async ({ name }: TBank) => {
 
     getUser()
 
+    processingBank.value = undefined
+    showRejectConsentsAlertDialog.value = false
+
     toast.success('Согласие на подключение успешно отозвано')
   } catch (error: unknown) {
     if (error instanceof ResponseError) {
@@ -186,6 +191,42 @@ const isBankAdded = (name: TBankName) => {
 const isBankConsented = (name: TBankName) => {
   const bankId = mapBanksToName.value[name].id
   return connectedBanks.value.includes(bankId)
+}
+
+const openAccountConsentsDialog = (bank: TBank) => {
+  processingBank.value = bank
+  showAccountConsentsDialog.value = true
+}
+
+const openRejectConsentsAlertDialog = (bank: TBank) => {
+  processingBank.value = bank
+  showRejectConsentsAlertDialog.value = true
+}
+
+const getBankButtonText = (name: TBankName) => {
+  if (mapBanksToLoading[name]) {
+    return 'Загрузка...'
+  }
+
+  if (isBankAdded(name)) {
+    return isBankConsented(name) ? 'Отозвать согласие' : 'Согласие на подключение'
+  }
+
+  return 'Добавить'
+}
+
+const getBankButtonDisabled = (name: TBankName) => {
+  return mapBanksToLoading[name] || isGetBanksLoading.value
+}
+
+const getBankButtonClick = (name: TBankName) => {
+  if (isBankAdded(name)) {
+    return isBankConsented(name)
+      ? openRejectConsentsAlertDialog
+      : openAccountConsentsDialog
+  }
+
+  return addBank
 }
 
 onMounted(getBanks)
