@@ -47,8 +47,12 @@ class UserStatsRepository(RepositoryInterface):
         elif to_dt:
             filter_stmt += f"AND booking_dt <= toDateTime('{to_dt}')"
 
+        # фильтр по направлению через знак amount
         if direction:
-            filter_stmt += f" AND credit_debit_indicator = '{direction}'"  # добавляем фильтр
+            if direction.lower() == "credit":
+                filter_stmt += " AND amount >= 0"
+            elif direction.lower() == "debit":
+                filter_stmt += " AND amount < 0"
 
         sql = f"""
             SELECT  
@@ -62,7 +66,7 @@ class UserStatsRepository(RepositoryInterface):
                 bank_transaction_code,
                 booking_dt,
                 value_dt,
-                credit_debit_indicator as direction
+                CASE WHEN amount >= 0 THEN 'Credit' ELSE 'Debit' END AS direction
             FROM transactions FINAL
             WHERE user_id = '{user_id}'
             {filter_stmt}
@@ -71,8 +75,6 @@ class UserStatsRepository(RepositoryInterface):
 
         records = await self.ch_client.fetch(sql)
         return [returning_dto(**record) for record in records]
-
-
 
 def update_consents(bank_id: int, consent_data: ConsentData):
     return update_jsonb(

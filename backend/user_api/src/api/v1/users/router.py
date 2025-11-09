@@ -36,3 +36,4 @@ async def get_me_transactions(
     return await stats_service.get_transactions(
         user.id, date_from=date_from, date_to=date_to, direction=direction
     )
+
