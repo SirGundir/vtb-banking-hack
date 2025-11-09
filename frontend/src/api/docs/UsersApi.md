@@ -72,7 +72,7 @@ This endpoint does not need any parameter.
 
 ## getMeTransactionsApiV1UsersMeTransactionsGet
 
-> Array&lt;UserTransactionsSchema&gt; getMeTransactionsApiV1UsersMeTransactionsGet(dateFrom, dateTo)
+> Array&lt;UserTransactionsSchema&gt; getMeTransactionsApiV1UsersMeTransactionsGet(dateFrom, dateTo, direction)
 
 Get Me Transactions
 
@@ -98,6 +98,8 @@ async function example() {
     dateFrom: 2013-10-20,
     // Date (optional)
     dateTo: 2013-10-20,
+    // string (optional)
+    direction: direction_example,
   } satisfies GetMeTransactionsApiV1UsersMeTransactionsGetRequest;
 
   try {
@@ -119,6 +121,7 @@ example().catch(console.error);
 |------------- | ------------- | ------------- | -------------|
 | **dateFrom** | `Date` |  | [Optional] [Defaults to `undefined`] |
 | **dateTo** | `Date` |  | [Optional] [Defaults to `undefined`] |
+| **direction** | `string` |  | [Optional] [Defaults to `undefined`] |
 
 ### Return type
 

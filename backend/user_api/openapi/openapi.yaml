@@ -238,6 +238,14 @@ paths:
             format: date
           - type: 'null'
           title: Date To
+      - name: direction
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Direction
       responses:
         '200':
           description: Successful Response
@@ -346,6 +354,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OkResponseSchema'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/recommend/{client_id}:
+    post:
+      summary: Recommend Stub
+      operationId: recommend_stub_api_v1_recommend__client_id__post
+      parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Client Id
+      - name: top_n
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 3
+          title: Top N
+      - name: use_ml
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Use Ml
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductRecommendation'
+                title: Response Recommend Stub Api V1 Recommend  Client Id  Post
         '422':
           description: Validation Error
           content:
@@ -503,6 +552,56 @@ components:
           default: ok
       type: object
       title: OkResponseSchema
+    ProductRecommendation:
+      properties:
+        productId:
+          type: string
+          title: Productid
+        productType:
+          type: string
+          title: Producttype
+        productName:
+          type: string
+          title: Productname
+        description:
+          type: string
+          title: Description
+        interestRate:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Interestrate
+        minAmount:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Minamount
+        maxAmount:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Maxamount
+        termMonths:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Termmonths
+        bank:
+          type: string
+          title: Bank
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - productId
+      - productType
+      - productName
+      - description
+      - bank
+      title: ProductRecommendation
     RefreshTokenDTO:
       properties:
         refreshToken:
@@ -531,6 +630,12 @@ components:
       required:
       - password
       title: SetPasswordDTO
+    TransactionDirection:
+      type: string
+      enum:
+      - Credit
+      - Debit
+      title: TransactionDirection
     UserSchema:
       properties:
         id:
@@ -595,6 +700,8 @@ components:
         transactionInfo:
           type: string
           title: Transactioninfo
+        direction:
+          $ref: '#/components/schemas/TransactionDirection'
       type: object
       required:
       - userId
@@ -605,6 +712,7 @@ components:
       - bookingDt
       - valueDt
       - transactionInfo
+      - direction
       title: UserTransactionsSchema
     ValidationError:
       properties:

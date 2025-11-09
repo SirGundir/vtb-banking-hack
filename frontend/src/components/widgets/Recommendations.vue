@@ -1,40 +1,45 @@
 <template>
-  <div class="flex flex-wrap gap-2">
+  <div v-if="isGetRecommendationsLoading" class="flex flex-wrap gap-2">
+    <UiSkeleton v-for="i in 3" :key="`skeleton-${i}`" class="w-[280px] h-[100px] rounded-lg" />
+  </div>
+  <div v-else class="flex flex-wrap gap-2">
     <div
       v-for="(recommendation, recommendationIndex) in recommendations"
       :key="`recommendation-${recommendationIndex}`"
-      class="bg-background rounded-lg p-4 shadow-sm w-[280px] max-w-full"
+      class="flex flex-col gap-2 rounded-lg p-4 shadow-sm w-[280px] max-w-full"
     >
-      <component :is="recommendation.icon" class="size-8 mb-4" />
-      <h3 class="text-sm font-medium">{{ recommendation.title }}</h3>
+      <div class="flex items-center gap-2 mb-2">
+        <component :is="mapIconsToProductType[recommendation.productType] ?? PackageSearch" class="size-8" />
+        <span class="text-sm font-medium">{{ recommendation.bank }}</span>
+      </div>
+      <h3 class="font-medium">{{ recommendation.productName }}</h3>
       <p class="text-sm text-muted-foreground">{{ recommendation.description }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Wallet, WalletCards, type LucideIcon } from 'lucide-vue-next'
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { Wallet, WalletCards, CreditCard, PackageSearch, type LucideIcon } from 'lucide-vue-next'
+
+import { useRecommendationsStore } from '@/stores/recommendations'
+import { type ProductRecommendation } from '@/api/models/ProductRecommendation'
+
+import { Skeleton as UiSkeleton } from '@/components/ui/skeleton'
+
+const recommendationsStore = useRecommendationsStore()
+const { recommendations, isGetRecommendationsLoading } = storeToRefs(recommendationsStore)
 
 defineOptions({
   name: 'WRecommendations',
 })
 
-interface IRecommendation {
-  icon: LucideIcon
-  title: string
-  description: string
+const mapIconsToProductType: Record<ProductRecommendation['productType'], LucideIcon> = {
+  'deposit': Wallet,
+  'loan': WalletCards,
+  'card': CreditCard,
 }
 
-const recommendations: IRecommendation[] = [
-  {
-    icon: Wallet,
-    title: 'Вклад с наименьшим процентом',
-    description: 'Не упустите выгодное предложение у VTB Банка по вкладам',
-  },
-  {
-    icon: WalletCards,
-    title: 'Очень выгодный кредит',
-    description: 'Выгодные условия для рефинансирования кредитов у VTB Банка',
-  },
-]
+onMounted(recommendationsStore.getRecommendations)
 </script>

@@ -13,6 +13,14 @@
  */
 
 import { mapValues } from '../runtime';
+import type { TransactionDirection } from './TransactionDirection';
+import {
+    TransactionDirectionFromJSON,
+    TransactionDirectionFromJSONTyped,
+    TransactionDirectionToJSON,
+    TransactionDirectionToJSONTyped,
+} from './TransactionDirection';
+
 /**
  * 
  * @export
@@ -61,7 +69,15 @@ export interface UserTransactionsSchema {
      * @memberof UserTransactionsSchema
      */
     transactionInfo: string;
+    /**
+     * 
+     * @type {TransactionDirection}
+     * @memberof UserTransactionsSchema
+     */
+    direction: TransactionDirection;
 }
+
+
 
 /**
  * Check if a given object implements the UserTransactionsSchema interface.
@@ -74,6 +90,7 @@ export function instanceOfUserTransactionsSchema(value: object): value is UserTr
     if (!('bookingDt' in value) || value['bookingDt'] === undefined) return false;
     if (!('valueDt' in value) || value['valueDt'] === undefined) return false;
     if (!('transactionInfo' in value) || value['transactionInfo'] === undefined) return false;
+    if (!('direction' in value) || value['direction'] === undefined) return false;
     return true;
 }
 
@@ -94,6 +111,7 @@ export function UserTransactionsSchemaFromJSONTyped(json: any, ignoreDiscriminat
         'bookingDt': (new Date(json['bookingDt'])),
         'valueDt': (new Date(json['valueDt'])),
         'transactionInfo': json['transactionInfo'],
+        'direction': TransactionDirectionFromJSON(json['direction']),
     };
 }
 
@@ -115,6 +133,7 @@ export function UserTransactionsSchemaToJSONTyped(value?: UserTransactionsSchema
         'bookingDt': value['bookingDt'].toISOString(),
         'valueDt': value['valueDt'].toISOString(),
         'transactionInfo': value['transactionInfo'],
+        'direction': TransactionDirectionToJSON(value['direction']),
     };
 }
 

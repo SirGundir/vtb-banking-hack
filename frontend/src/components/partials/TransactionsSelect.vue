@@ -3,7 +3,7 @@
     <UiLabel class="whitespace-nowrap">Тип транзакции:</UiLabel>
     <UiSelect
       v-model="vModelValue"
-      :defaultValue="ETransactionType.EXPENSES"
+      :defaultValue="TransactionDirection.Credit"
     >
       <UiSelectTrigger class="cursor-pointer">
         <UiSelectValue
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
 
-import { ETransactionType } from '@/shared/enums'
+import { TransactionDirection } from '@/api/models/TransactionDirection'
 
 import {
   Select as UiSelect,
@@ -46,24 +46,24 @@ defineOptions({
 })
 
 const props = defineProps<{
-  modelValue: `${ETransactionType}`
+  modelValue: TransactionDirection
 }>()
 
 const emits = defineEmits<{
-  (event: 'update:modelValue', value: `${ETransactionType}`): void
+  (event: 'update:modelValue', value: TransactionDirection): void
 }>()
 
 const vModelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
-  defaultValue: ETransactionType.EXPENSES,
+  defaultValue: TransactionDirection.Credit,
 })
 
-const mapTransactionTypeToLabel: Record<`${ETransactionType}`, string> = {
-  [ETransactionType.INCOME]: 'Поступление',
-  [ETransactionType.EXPENSES]: 'Списание',
+const mapTransactionTypeToLabel: Record<TransactionDirection, string> = {
+  [TransactionDirection.Credit]: 'Поступление',
+  [TransactionDirection.Debit]: 'Списание',
 }
 
-const availableTransactionTypes = Object.values(ETransactionType).map(value => ({
+const availableTransactionTypes = Object.values(TransactionDirection).map(value => ({
   label: mapTransactionTypeToLabel[value],
   value,
 }))

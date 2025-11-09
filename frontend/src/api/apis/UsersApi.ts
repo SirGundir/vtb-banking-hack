@@ -31,6 +31,7 @@ import {
 export interface GetMeTransactionsApiV1UsersMeTransactionsGetRequest {
     dateFrom?: Date | null;
     dateTo?: Date | null;
+    direction?: string | null;
 }
 
 /**
@@ -87,6 +88,10 @@ export class UsersApi extends runtime.BaseAPI {
 
         if (requestParameters['dateTo'] != null) {
             queryParameters['date_to'] = requestParameters['dateTo'];
+        }
+
+        if (requestParameters['direction'] != null) {
+            queryParameters['direction'] = requestParameters['direction'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

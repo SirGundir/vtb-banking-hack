@@ -13,6 +13,7 @@ Name | Type
 `bookingDt` | Date
 `valueDt` | Date
 `transactionInfo` | string
+`direction` | [TransactionDirection](TransactionDirection.md)
 
 ## Example
 
@@ -28,6 +29,7 @@ const example = {
   "bookingDt": null,
   "valueDt": null,
   "transactionInfo": null,
+  "direction": null,
 } satisfies UserTransactionsSchema
 
 console.log(example)

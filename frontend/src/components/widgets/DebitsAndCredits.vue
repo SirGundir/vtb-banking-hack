@@ -2,17 +2,15 @@
   <div class="bg-background rounded-lg p-4 shadow-sm flex flex-col gap-4">
     <h3>Статистика по списаниям и поступлениям</h3>
     <UiSeparator />
-    <PTransactionsSelect v-model="selectedTransactionType" />
+    <PTransactionsSelect v-model="direction" />
     <PDateFilter v-model:start="startDate" v-model:end="endDate" />
     <PPieChart class="h-[400px]" :data="chartData" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { random } from 'radash'
-
-import { ETransactionType } from '@/shared/enums'
 
 import PTransactionsSelect from '@/components/partials/TransactionsSelect.vue'
 import PDateFilter from '@/components/partials/DateFilter.vue'
@@ -24,12 +22,11 @@ import { useMyTransactions } from '@/composables/useMyTransactions'
 import { useConnectedBanks } from '@/composables/useConnectedBanks'
 
 defineOptions({
-  name: 'WDebitsAndReceipts',
+  name: 'WDebitsAndCredits',
 })
 
 const { connectedBanks } = useConnectedBanks()
-const { startDate, endDate } = useMyTransactions()
-const selectedTransactionType = ref<ETransactionType>(ETransactionType.EXPENSES)
+const { startDate, endDate, direction } = useMyTransactions()
 
 const chartData = computed(() => {
   return {
