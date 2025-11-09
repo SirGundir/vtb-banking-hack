@@ -4,7 +4,11 @@ from decimal import Decimal
 from pydantic import UUID4
 
 from core.dto import BaseModelDTO
+from enum import Enum
 
+class TransactionDirection(str, Enum):
+    CREDIT = "Credit"
+    DEBIT = "Debit"
 
 class UserTransactionsDTO(BaseModelDTO):
     user_id: UUID4
@@ -15,3 +19,4 @@ class UserTransactionsDTO(BaseModelDTO):
     booking_dt: datetime
     value_dt: datetime
     transaction_info: str
+    direction: TransactionDirection

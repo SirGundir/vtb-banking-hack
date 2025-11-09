@@ -37,18 +37,20 @@ class UserStatsRepository(RepositoryInterface):
         user_id = filters['user_id']
         from_dt = filters.get("from_dt")
         to_dt = filters.get("to_dt")
+        direction = filters.get("direction")  # 'Credit' / 'Debit' / None
 
         filter_stmt = ''
         if from_dt and to_dt:
-            filter_stmt = f"AND booking_dt BETWEEN toDateTime('{from_dt}') AND toDateTime('{to_dt}')"
-
+            filter_stmt += f"AND booking_dt BETWEEN toDateTime('{from_dt}') AND toDateTime('{to_dt}')"
         elif from_dt:
-            filter_stmt  = f"AND booking_dt >= toDateTime('{from_dt}')"
-
+            filter_stmt += f"AND booking_dt >= toDateTime('{from_dt}')"
         elif to_dt:
-            filter_stmt = f"AND booking_dt <= toDateTime('{to_dt}')"
+            filter_stmt += f"AND booking_dt <= toDateTime('{to_dt}')"
 
-        sql = """
+        if direction:
+            filter_stmt += f" AND credit_debit_indicator = '{direction}'"  # добавляем фильтр
+
+        sql = f"""
             SELECT  
                 user_id,
                 bank_id,
@@ -59,16 +61,17 @@ class UserStatsRepository(RepositoryInterface):
                 amount,
                 bank_transaction_code,
                 booking_dt,
-                value_dt
+                value_dt,
+                credit_debit_indicator as direction
             FROM transactions FINAL
             WHERE user_id = '{user_id}'
             {filter_stmt}
             ORDER BY booking_dt DESC
-        """.format(user_id=user_id, filter_stmt=filter_stmt)
+        """
 
-        #print(f">>{sql}")
         records = await self.ch_client.fetch(sql)
         return [returning_dto(**record) for record in records]
+
 
 
 def update_consents(bank_id: int, consent_data: ConsentData):

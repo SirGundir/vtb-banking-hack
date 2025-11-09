@@ -26,6 +26,7 @@ from log import get_logger
 from api.v1.auth.router import router as auth_router
 from api.v1.users.router import router as users_router
 from api.v1.banks.router import router as banks_router
+from api.v1.recomendation.router import router as recomendation_router
 
 
 logger = get_logger(__name__)
@@ -164,6 +165,7 @@ def init_app(
     v1_router.include_router(auth_router)
     v1_router.include_router(users_router)
     v1_router.include_router(banks_router)
+    v1_router.include_router(recomendation_router)
 
     app.include_router(v1_router)
 

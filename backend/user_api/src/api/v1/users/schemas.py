@@ -1,9 +1,13 @@
 from datetime import date, datetime
+from enum import Enum
 
 from pydantic import UUID4, BaseModel, Field, computed_field
 
 from application.auth.dto import ConsentDataDTO
 
+class TransactionDirection(str, Enum):
+    CREDIT = "Credit"
+    DEBIT = "Debit"
 
 class UserSchema(BaseModel):
     id: UUID4
@@ -30,3 +34,4 @@ class UserTransactionsSchema(BaseModel):
     booking_dt: datetime = Field(serialization_alias='bookingDt')
     value_dt: datetime = Field(serialization_alias='valueDt')
     transaction_info: str = Field(serialization_alias='transactionInfo')
+    direction: TransactionDirection 

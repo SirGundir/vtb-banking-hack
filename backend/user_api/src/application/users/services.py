@@ -11,11 +11,14 @@ from infrastructure.repositories.users import UserStatsRepository
 class UserStatsService:
     stats_repository: UserStatsRepository
 
-    async def get_transactions(self, user_id: UUID4, date_from: date, date_to: date) -> list[UserTransactionsDTO]:
+    async def get_transactions(
+        self, user_id: UUID4, date_from: date, date_to: date, direction: str | None = None
+    ) -> list[UserTransactionsDTO]:
         transactions = await self.stats_repository.fetch_transactions(
             returning_dto=UserTransactionsDTO,
             user_id=user_id,
             from_dt=date_from.isoformat() if date_from else None,
             to_dt=date_to.isoformat() if date_to else None,
+            direction=direction
         )
         return transactions
