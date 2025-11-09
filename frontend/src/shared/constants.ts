@@ -1,3 +1,5 @@
+import { CalendarDate } from '@internationalized/date'
+
 import { type TBanks } from '@/shared/types'
 import { EBankName } from '@/shared/enums'
 
@@ -33,3 +35,8 @@ export const AVAILABLE_BANKS: TBanks = [
 
 export const CLIENT_ID = 'team221'
 export const CLIENT_SECRET = 'uLICRPukXIX7EvwS49xgEuDEByZXfMVw'
+
+export const CURRENT_CALENDAR_DATE = new CalendarDate(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+
+export const DEFAULT_START_DATE = CURRENT_CALENDAR_DATE.subtract({ days: 20 }).toDate('UTC')
+export const DEFAULT_END_DATE = CURRENT_CALENDAR_DATE.toDate('UTC')

@@ -51,7 +51,7 @@ import WRejectConsentsDialog from '@/components/widgets/RejectConsentsDialog.vue
 
 import { ResponseError } from '@/api/runtime'
 
-import { AVAILABLE_BANKS, CLIENT_ID, CLIENT_SECRET } from '@/shared/constants'
+import { AVAILABLE_BANKS } from '@/shared/constants'
 import { type TBank, type TBankName } from '@/shared/types'
 import { EBankName } from '@/shared/enums'
 
@@ -112,8 +112,8 @@ const addBank = async ({ name, apiUrl }: TBank) => {
     await banksStore.addBank({
       name,
       apiUrl,
-      clientId: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
+      clientId: import.meta.env.VITE_CLIENT_ID,
+      clientSecret: import.meta.env.VITE_CLIENT_SECRET,
     })
 
     getBanks()
